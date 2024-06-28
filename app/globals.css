@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #dadada;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #a5a6b4;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+    ) rgb(var(--background-start-rgb));
+}
+
+@layer components {
+    .btn-primary {
+        @apply flex justify-center items-center w-[126px] h-[36px] rounded-[12px] hover:bg-black hover:text-[white];
+    }
+}
+
+@layer burger {
+    .burger-wrapper {
+        @apply w-[76px] h-[46px] flex justify-center items-center flex-col ml-[26px] rounded-[5px]
+    }
+
+    .burger-line {
+        @apply h-[3px] w-[26px] bg-[white] my-1
+    }
+
+    .burger-wrapper:hover .burger-line {
+        @apply my-2
+    }
+}
