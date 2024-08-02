@@ -45,3 +45,10 @@ export type editPostProps = {
   isFavorite?: boolean;
   type?: string | PostType
 }
+
+export type registrationProps = {
+  email: string;
+  userName: string;
+  password: string;
+  confirmPassword: string;
+}

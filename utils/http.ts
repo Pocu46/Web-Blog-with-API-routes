@@ -1,6 +1,7 @@
-import {editPostProps, postActionProps, PostsData, SendPostProps} from "@/utils/models";
+import {editPostProps, postActionProps, PostsData, registrationProps, SendPostProps} from "@/utils/models";
 import moment from "moment";
 import {QueryClient} from "@tanstack/react-query";
+// import logger from "next-auth/src/utils/logger";
 
 export const queryClient:QueryClient = new QueryClient()
 
@@ -110,5 +111,28 @@ export const editPost = async ({id, summary, text, type, isFavorite}: editPostPr
     }
   } catch {
     throw Error("Post isn't edited. Please try again later!")
+  }
+}
+
+export const userRegistration = async ({email, userName, password, confirmPassword}: registrationProps) => {
+  try {
+    const response = await fetch('/api/registration', {
+      method: 'POST',
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        userName,
+        password,
+        confirmPassword
+      })
+    })
+
+    if(response.status !== 201) {
+      throw new Error("User registration failed")
+    }
+  } catch (error) {
+    console.log(error)
   }
 }

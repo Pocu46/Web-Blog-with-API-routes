@@ -91,6 +91,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
     if ((summaryVal!.trim().length < 3 && textVal!.trim().length < 5) || (!summaryVal && !textVal)) {
       setSummaryError(true);
       setTextError(true);
+      return
     }
 
     if (summaryVal!.trim().length < 3 || !summaryVal) {
@@ -155,8 +156,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
       enterTo="opacity-100 scale-100"
       className="w-full"
     >
-      <form className="w-full h-auto"
-            onSubmit={buttonText === "Edit" ? editPostHandler : createPostHandler}>
+      <form className="w-full h-auto" onSubmit={buttonText === "Edit" ? editPostHandler : createPostHandler}>
         <h2 className="text-center text-3xl font-[500] leading-[1.2] mb-2">{headingText}</h2>
 
         <div className="my-2 flex flex-col">

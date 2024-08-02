@@ -115,7 +115,7 @@ const Post: React.FC<PostProps> = ({id, summary, time, type, text, isFavorite}) 
             />
           </div>
           <div>
-            <Checkbox action={changeFullStateHandler}/>
+            <Checkbox action={changeFullStateHandler} text="Enable full Summary text" />
           </div>
         </div>
       </div>

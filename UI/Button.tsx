@@ -7,11 +7,12 @@ export type ButtonProps = {
   action?:  React.MouseEventHandler<HTMLButtonElement>;
   link: string;
   isButton?: boolean;
-  type?: "submit" | "reset" | "button"
+  type?: "submit" | "reset" | "button";
+  disabled?: boolean;
 };
-const Button: React.FC<ButtonProps> = ({text, style, action, link, isButton, type}) => {
+const Button: React.FC<ButtonProps> = ({text, style, action, link, isButton, type, disabled}) => {
   if(isButton) {
-    return <button className={style} onClick={action} type={type}>{text}</button>
+    return <button className={style} onClick={action} type={type} disabled={disabled} >{text}</button>
   }
 
   return(
