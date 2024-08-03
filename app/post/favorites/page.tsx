@@ -5,7 +5,7 @@ import {getPosts} from "@/utils/http";
 import Post from "@/components/Post";
 import {useQuery} from "@tanstack/react-query";
 import Loader from "@/components/Loader";
-import Error from "@/components/Error";
+import Error from "@/components/ErrorComponent";
 import {Transition} from '@headlessui/react';
 
 const Favorites = () => {

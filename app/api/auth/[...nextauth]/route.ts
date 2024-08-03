@@ -6,6 +6,7 @@ import User from "@/models/user";
 import bcrypt from "bcrypt";
 import type {NextAuthOptions, User as NextAuthUser} from "next-auth";
 import Github from "next-auth/providers/github";
+import {validateEmail} from "@/utils/methods";
 
 type UserType = NextAuthUser & {
   id?: string;
@@ -53,7 +54,7 @@ export const options: NextAuthOptions = {
 
           const passwordCompare = await bcrypt.compare(credentials.password, user.password);
 
-          if (user && passwordCompare) {
+          if (user && passwordCompare && validateEmail(credentials.email)) {
             const userWithoutPassword = {
               id: user._id?.toString(),
               email: user.email,
@@ -78,9 +79,14 @@ export const options: NextAuthOptions = {
   },
   callbacks: {
     async session({session , token}) {
-      session.user = token.user as UserType;
-      const sessionUser = await User.findOne({ email: session.user.email })
-      const userWithId = {id: sessionUser._id.toString(), ...sessionUser}
+      session.user = token.user as UserType
+      const sessionUser = await User.findOne({ username: session.user.name })
+      const userWithId = {
+        id: sessionUser._id.toString(),
+        email: sessionUser.email,
+        username: sessionUser.username,
+        image: sessionUser.image
+      }
       session.user = userWithId
 
       return session;
@@ -103,14 +109,15 @@ export const options: NextAuthOptions = {
             // check if user already exists
             const userExists = await User.findOne({ email: profile.email });
             const googleUser = {...userExists} as UserType
-
             // if not, create a new document and save user in MongoDB
-            if (!userExists && profile.email) {
-              await User.create({
-                email: googleUser.email,
-                username: googleUser?.name,
-                image: googleUser.picture,
-              });
+            if(profile?.email) {
+              if (!userExists && profile.email && validateEmail(profile?.email)) {
+                await User.create({
+                  email: googleUser.email,
+                  username: googleUser?.name,
+                  image: googleUser.picture,
+                });
+              }
             }
 
             return true
@@ -129,11 +136,14 @@ export const options: NextAuthOptions = {
           if(profile) {
             // check if user already exists
             const githubUser  = {...profile} as UserType
-            const userExists = await User.findOne({ username: githubUser.login });
+            const userExists = await User.findOne({ email: githubUser.login })
+
+            console.log("githubUser: ", githubUser)
 
             // if not, create a new document and save user in MongoDB
             if (!userExists) {
               await User.create({
+                email: githubUser.login,
                 username: githubUser.login,
                 image: githubUser.avatar_url,
               });

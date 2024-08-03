@@ -8,10 +8,10 @@ import Link from "next/link";
 import {validateEmail, validatePassword} from "@/utils/methods";
 import {userRegistration} from "@/utils/http";
 import {useMutation} from "@tanstack/react-query";
-import Error from "@/components/Error";
 import {registrationProps} from "@/utils/models";
 import {useRouter} from "next/navigation";
 import {signIn} from "next-auth/react";
+import ErrorComponent from "@/components/ErrorComponent";
 
 const RegistrationComponent = () => {
   const [loginVal, setLoginVal] = useState<string>('')
@@ -115,7 +115,7 @@ const RegistrationComponent = () => {
 
   if(isError) {
     return (
-      <Error
+      <ErrorComponent
         error={error}
         reset={
           () => {

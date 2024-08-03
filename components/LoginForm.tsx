@@ -4,7 +4,6 @@ import Input from "@/UI/Input";
 import Link from "next/link";
 import Button from "@/UI/Button";
 import React, {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
 import {validateEmail, validatePassword} from "@/utils/methods";
 import {signIn} from "next-auth/react";
 
@@ -13,7 +12,6 @@ const LoginForm = () => {
   const [loginError, setLoginError] = useState<boolean>(false)
   const [passwordVal, setPasswordVal] = useState<string>('')
   const [passwordValError, setPasswordError] = useState<boolean>(false)
-  const router = useRouter()
 
   const loginHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -30,17 +28,7 @@ const LoginForm = () => {
     }
 
     if (isValid) {
-      const res = await signIn('credentials', {
-        email: loginVal,
-        password: passwordVal,
-        redirect: false
-      })
-
-      if (res && !res.error && res.status === 200) {
-        router.replace('/')
-      } else {
-        console.log(res)
-      }
+      signIn("credentials", {email: loginVal, password: passwordVal, callbackUrl: "/"})
     }
   }
 
@@ -86,8 +74,8 @@ const LoginForm = () => {
         errorMessage="Wrong Password"
       />
       <div className="w-full flex justify-center">
-          <span className="text-2xl">Go to <Link href="/registration"
-                                                 className="text-blue-700 underline">Registration</Link> page</span>
+        <span className="text-2xl">Go to <Link href="/registration"
+                                               className="text-blue-700 underline">Registration</Link> page</span>
       </div>
 
       <Button

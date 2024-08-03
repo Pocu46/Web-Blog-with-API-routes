@@ -8,12 +8,11 @@ import Link from "next/link";
 
 const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
   const pathname: string = usePathname()
-  const {data: session} = useSession()
+  const session = useSession()
 
   const active: string = "bg-[#88bddd] w-full h-[4rem] flex justify-center items-center text-[black] text-3xl font-[200] leading-[1] text-[white] hover:bg-[#000] hover:text-[white] transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300"
   const style: string = "w-full h-[4rem] flex justify-center items-center text-3xl font-[200] leading-[1] text-[white] hover:bg-[#000] hover:text-[white] transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300"
 
-  const logoutHandler = () => signOut({callbackUrl: "/login"})
   return (
     <Transition
       appear={true}
@@ -32,7 +31,7 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
         <Link onClick={action} className={pathname == "/post/posts" ? active : style} href="/post/posts">Posts</Link>
         <Link onClick={action} className={pathname == "/post/favorites" ? active : style} href="/post/favorites">Favorites</Link>
 
-        {session?.user && <button onClick={logoutHandler} className={style}>Logout</button>}
+        {session?.data?.user && <button onClick={() => signOut()} className={style}>Logout</button>}
       </nav>
     </Transition>
   )

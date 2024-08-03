@@ -5,7 +5,7 @@ import {getPosts} from "@/utils/http";
 import {PostsType} from "@/utils/models";
 import {useQuery} from "@tanstack/react-query";
 import Loader from "@/components/Loader";
-import Error from "@/components/Error";
+import Error from "@/components/ErrorComponent";
 import {useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import {Transition} from '@headlessui/react';

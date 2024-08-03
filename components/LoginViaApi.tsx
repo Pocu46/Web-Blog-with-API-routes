@@ -1,14 +1,28 @@
 "use client"
 
 import React, {useState} from "react";
-import {signIn} from "next-auth/react";
 import Image from "next/image";
+import {signIn} from "next-auth/react";
+
+const ButtonContent = ({image, text}: {image: string; text: string}) => {
+  return (
+    <>
+      <Image
+        src={image}
+        alt="Google login button"
+        width={25}
+        height={25}
+      />
+      {text}
+    </>
+  )
+}
 
 const LoginViaApi = () => {
   const [disabledGoogle, setDisabledGoogle] = useState(false)
   const [disabledGithub, setDisabledGithub] = useState(false)
 
-  const googleHandler = () => {
+  const googleHandler = async () => {
     setDisabledGoogle(true)
     signIn("google", {callbackUrl: "/"})
   }
@@ -25,32 +39,20 @@ const LoginViaApi = () => {
         <span className="flex justify-center items-center h-0.5 w-[46px] bg-black"></span>
       </div>
       <button
-        className="flex justify-center gap-2 items-center rounded-[12px] mt-5 bg-gray-300 w-[176px] h-[46px] m-auto transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 hover:bg-[#88bddd] hover:text-[white]"
+        className="flex justify-center gap-2 items-center rounded-[12px] mt-5 bg-gray-300 w-[176px] h-[46px] m-auto transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 hover:bg-[#88bddd] hover:text-[white] disabled:bg-gray-300 disabled:text-gray-500"
         type="button"
         onClick={googleHandler}
         disabled={disabledGoogle}
       >
-        <Image
-          src={"/google.png"}
-          alt="Google login button"
-          width={25}
-          height={25}
-        />
-        {!disabledGoogle ? "Login via Google" : "Loading..."}
+        {!disabledGoogle ? <ButtonContent text="Login via Google" image={"/google.png"} /> : "Loading..."}
       </button>
       <button
-        className="flex justify-center gap-2 items-center rounded-[12px] mt-5 bg-gray-300 w-[176px] h-[46px] m-auto transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 hover:bg-[#88bddd] hover:text-[white]"
+        className="flex justify-center gap-2 items-center rounded-[12px] mt-5 bg-gray-300 w-[176px] h-[46px] m-auto transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 hover:bg-[#88bddd] hover:text-[white] disabled:bg-gray-300 disabled:text-gray-500"
         type="button"
         onClick={githubHandler}
         disabled={disabledGithub}
       >
-        <Image
-          src={"/github.png"}
-          alt="GitHub login button"
-          width={25}
-          height={25}
-        />
-        {!disabledGithub ? "Login via GitHub" : "Loading..."}
+        {!disabledGithub ? <ButtonContent text="Login via GitHub" image={"/github.png"} /> : "Loading..."}
       </button>
     </div>
   )

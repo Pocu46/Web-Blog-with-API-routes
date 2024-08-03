@@ -2,7 +2,7 @@ import {NextRequest, NextResponse} from "next/server";
 import User from "@/models/user";
 import {connectToDB} from "@/utils/database";
 import bcrypt from "bcrypt";
-import {validatePassword} from "@/utils/methods";
+import {validateEmail, validatePassword} from "@/utils/methods";
 
 export const POST = async (request: NextRequest) => {
   const {email, userName, password, confirmPassword} = await request.json()
@@ -19,7 +19,7 @@ export const POST = async (request: NextRequest) => {
   const passwordMatched = validatePassword(password)
 
   // if not, create a new document and save user in MongoDB
-  if (!userExists && email && (password === confirmPassword) && passwordMatched) {
+  if (!userExists && validateEmail(email) && (password === confirmPassword) && passwordMatched) {
     const hashedPassword = await bcrypt.hash(password, 8)
 
     try {

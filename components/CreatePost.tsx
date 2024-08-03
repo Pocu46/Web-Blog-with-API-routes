@@ -6,7 +6,7 @@ import {useMutation} from "@tanstack/react-query";
 import {useRouter} from "next/navigation";
 import {editPost, queryClient, sendPost} from "@/utils/http";
 import Loader from "@/components/Loader";
-import Error from "@/components/Error";
+import Error from "@/components/ErrorComponent";
 import {editPostProps, SendPostProps} from "@/utils/models";
 import {Transition} from '@headlessui/react';
 
@@ -19,6 +19,10 @@ type CreatePostProps = {
   action?: () => void;
   headingText: string;
   buttonText: string;
+}
+
+function ErrorComponent(props: { reset: () => void, error: null | Error }) {
+  return null;
 }
 
 const CreatePost: React.FC<CreatePostProps> = ({
@@ -136,7 +140,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
   if (isSpinning && !isError) return <Loader/>
   if (isError) {
     return (
-      <Error reset={() => mutate({
+      <ErrorComponent reset={() => mutate({
         summary: summaryRef.current?.value,
         text: textRef.current?.value,
         type: typeRef.current?.value
@@ -145,7 +149,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
       />
     )
   }
-  if (isEditError) return <Error reset={editPostHandler} error={editError}/>
+  if (isEditError) return <ErrorComponent reset={editPostHandler} error={editError}/>
 
   return (
     <Transition

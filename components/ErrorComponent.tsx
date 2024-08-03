@@ -6,7 +6,7 @@ type ErrorProps = {
   reset: ButtonProps['action'];
 }
 
-const Error: React.FC<ErrorProps> = ({error,reset}) => {
+const ErrorComponent: React.FC<ErrorProps> = ({error,reset}) => {
   useEffect(() => {
     console.error(error)
   }, [error])
@@ -40,4 +40,4 @@ const Error: React.FC<ErrorProps> = ({error,reset}) => {
   )
 }
 
-export default Error;
+export default ErrorComponent;

@@ -1,11 +1,16 @@
-import {editPostProps, postActionProps, PostsData, registrationProps, SendPostProps} from "@/utils/models";
+import {
+  editPostProps,
+  postActionProps,
+  PostsData,
+  registrationProps,
+  SendPostProps
+} from "@/utils/models";
 import moment from "moment";
 import {QueryClient} from "@tanstack/react-query";
-// import logger from "next-auth/src/utils/logger";
 
-export const queryClient:QueryClient = new QueryClient()
+export const queryClient: QueryClient = new QueryClient()
 
-export const getPosts = async ():Promise<PostsData> => {
+export const getPosts = async (): Promise<PostsData> => {
   const url: string = `${process.env.NEXT_PUBLIC_DB_URL}`
 
   const res = await fetch(url)
@@ -33,8 +38,8 @@ export const sendPost = async ({summary, text, type}: SendPostProps) => {
   try {
     const response = await fetch(url, payload)
 
-    if(!response?.ok) {
-      throw Error( 'The Post isn\'t saved!')
+    if (!response?.ok) {
+      throw Error('The Post isn\'t saved!')
     }
   } catch {
     throw Error('Server doesn\'t available at this moment!')
@@ -45,7 +50,7 @@ export const postAction = async ({id, summary, text, type, time, isFavorite, met
   const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
   let isFavoriteValue: boolean
 
-  if(isFavorite === false) {
+  if (isFavorite === false) {
     isFavoriteValue = true
   } else {
     isFavoriteValue = false
@@ -129,7 +134,7 @@ export const userRegistration = async ({email, userName, password, confirmPasswo
       })
     })
 
-    if(response.status !== 201) {
+    if (response.status !== 201) {
       throw new Error("User registration failed")
     }
   } catch (error) {
