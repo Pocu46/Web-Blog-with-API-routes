@@ -45,7 +45,7 @@ export const sendPost = async ({userId, summary, text, type}: SendPostProps) => 
 }
 
 export const postAction = async ({id, summary, text, type, time, isFavorite, method}: postActionProps) => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
+  // const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
   let isFavoriteValue: boolean
 
   if (isFavorite === false) {
@@ -82,7 +82,8 @@ export const postAction = async ({id, summary, text, type, time, isFavorite, met
   }
 
   try {
-    const response = await fetch(url, payload)
+    // const response = await fetch(url, payload)
+    const response = await fetch(`/api/notes/${id}`, payload)
 
     if (!response?.ok) {
       throw Error(message)
@@ -93,7 +94,7 @@ export const postAction = async ({id, summary, text, type, time, isFavorite, met
 }
 
 export const editPost = async ({id, summary, text, type, isFavorite}: editPostProps) => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
+  // const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
 
   const payload = {
     method: 'PATCH',
@@ -107,7 +108,8 @@ export const editPost = async ({id, summary, text, type, isFavorite}: editPostPr
   }
 
   try {
-    const response = await fetch(url, payload)
+    // const response = await fetch(url, payload)
+    const response = await fetch(`/api/notes/${id}`, payload)
 
     if (!response?.ok) {
       throw Error("Post isn't edited. Please try again later!")

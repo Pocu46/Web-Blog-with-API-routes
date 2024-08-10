@@ -10,6 +10,7 @@ import {editPostProps, SendPostProps, sessionUserType} from "@/utils/models";
 import {Transition} from '@headlessui/react';
 import {useSession} from "next-auth/react";
 import ErrorComponent from "@/components/ErrorComponent";
+import {validateStringLength} from "@/utils/methods";
 
 type CreatePostProps = {
   id?: string;
@@ -91,28 +92,28 @@ const CreatePost: React.FC<CreatePostProps> = ({
   const createPostHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if ((summaryVal!.trim().length < 3 && textVal!.trim().length < 5) || (!summaryVal && !textVal)) {
+    let isValid = true
+
+    if (validateStringLength(summaryVal, 3) || !summaryVal) {
       setSummaryError(true);
+      isValid = false
+      return
+    }
+    if (validateStringLength(textVal, 5) || !textVal) {
       setTextError(true);
+      isValid = false
       return
     }
 
-    if (summaryVal!.trim().length < 3 || !summaryVal) {
-      setSummaryError(true);
-      return
+    if(isValid) {
+      mutate({
+        userId: sessionUser?.id,
+        summary: summaryVal,
+        text: textVal,
+        type: typeRef.current?.value
+      })
     }
-    if (textVal!.trim().length < 5 || !textVal) {
-      setTextError(true);
-      return
-    }
-
-    mutate({
-      userId: sessionUser?.id,
-      summary: summaryVal,
-      text: textVal,
-      type: typeRef.current?.value
-    });
-  };
+  }
 
   const summaryStyles: string = summaryError ? "w-full px-3 py-1.5 bg-[#e5b6c0] rounded-md border-2 border-solid border-[red]" : "w-full px-3 py-1.5 rounded-md border-2 border-solid border-[#99aec3]"
   const textStyles: string = textError ? "w-full px-3 py-1.5 bg-[#e5b6c0] rounded-md border-2 border-solid border-[red]" : "w-full px-3 py-1.5 rounded-md border-2 border-solid border-[#99aec3]"
