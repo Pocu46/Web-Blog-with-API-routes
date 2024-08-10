@@ -1,7 +1,7 @@
 import {
   editPostProps,
   postActionProps,
-  PostsData,
+  PostsType,
   registrationProps,
   SendPostProps
 } from "@/utils/models";
@@ -10,10 +10,8 @@ import {QueryClient} from "@tanstack/react-query";
 
 export const queryClient: QueryClient = new QueryClient()
 
-export const getPosts = async (): Promise<PostsData> => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL}`
-
-  const res = await fetch(url)
+export const getPosts = async (): Promise<PostsType[] | []> => {
+  const res = await fetch("/api/notes/list");
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
@@ -22,11 +20,11 @@ export const getPosts = async (): Promise<PostsData> => {
   return data
 }
 
-export const sendPost = async ({summary, text, type}: SendPostProps) => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL}`
+export const sendPost = async ({userId, summary, text, type}: SendPostProps) => {
   const payload = {
     method: 'POST',
     body: JSON.stringify({
+      userId,
       summary: summary?.trim(),
       text: text?.trim(),
       type: type,
@@ -36,10 +34,10 @@ export const sendPost = async ({summary, text, type}: SendPostProps) => {
   }
 
   try {
-    const response = await fetch(url, payload)
+    const response = await fetch("/api/notes/create", payload)
 
     if (!response?.ok) {
-      throw Error('The Post isn\'t saved!')
+      throw Error('The Post isn\'t created!')
     }
   } catch {
     throw Error('Server doesn\'t available at this moment!')

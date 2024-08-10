@@ -28,7 +28,7 @@ const LoginForm = () => {
     }
 
     if (isValid) {
-      signIn("credentials", {email: loginVal, password: passwordVal, callbackUrl: "/"})
+      await signIn("credentials", {email: loginVal, password: passwordVal, callbackUrl: "/"})
     }
   }
 

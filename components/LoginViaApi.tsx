@@ -24,11 +24,11 @@ const LoginViaApi = () => {
 
   const googleHandler = async () => {
     setDisabledGoogle(true)
-    signIn("google", {callbackUrl: "/"})
+    await signIn("google", {callbackUrl: "/"})
   }
-  const githubHandler = () => {
+  const githubHandler = async () => {
     setDisabledGithub(true)
-    signIn("github", {callbackUrl: "/"})
+    await signIn("github", {callbackUrl: "/"})
   }
 
   return (

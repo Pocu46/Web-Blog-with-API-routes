@@ -1,5 +1,12 @@
+type PostCrator = {
+  _id: string;
+  email: string;
+  username: string;
+}
+
 export type PostsType = {
-  id: string,
+  _id: string;
+  creator: PostCrator,
   summary: string,
   text: string,
   type: string,
@@ -23,6 +30,7 @@ export type PostsData = {
 export type PostType = "Note" | "News";
 
 export type SendPostProps = {
+  userId: string;
   summary?: string;
   text?: string;
   type?: string | PostType
@@ -51,4 +59,11 @@ export type registrationProps = {
   userName: string;
   password: string;
   confirmPassword: string;
+}
+
+export type sessionUserType = {
+  id: string;
+  username: string;
+  email?: string;
+  image?: string;
 }

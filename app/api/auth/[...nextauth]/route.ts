@@ -19,7 +19,7 @@ type UserType = NextAuthUser & {
   picture?: string;
 };
 
-export const options: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt"
   },
@@ -48,6 +48,8 @@ export const options: NextAuthOptions = {
           // check if user already exists
           const user = await User.findOne({email: credentials.email}) as UserType;
 
+          console.log("user: ", user)
+
           if (!user) {
             return null;
           }
@@ -56,7 +58,7 @@ export const options: NextAuthOptions = {
 
           if (user && passwordCompare && validateEmail(credentials.email)) {
             const userWithoutPassword = {
-              id: user._id?.toString(),
+              id: user["_id"]?.toString(),
               email: user.email,
               username: user.username
             }
@@ -79,8 +81,17 @@ export const options: NextAuthOptions = {
   },
   callbacks: {
     async session({session , token}) {
-      session.user = token.user as UserType
-      const sessionUser = await User.findOne({ username: session.user.name })
+      // console.log(session.user)
+      // let sessionUser
+      //
+      // if(session.user && session.user.email) {
+      //   sessionUser = await User.findOne({ email: session?.user?.email })
+      // } else {
+      //   sessionUser = await User.findOne({ username: session?.user?.name })
+      // }
+
+      const sessionUser = await User.findOne({ email: session?.user?.email })
+
       const userWithId = {
         id: sessionUser._id.toString(),
         email: sessionUser.email,
@@ -90,12 +101,6 @@ export const options: NextAuthOptions = {
       session.user = userWithId
 
       return session;
-    },
-    async jwt({token, user}) {
-      if (user) {
-        token.user = user;
-      }
-      return token;
     },
     async signIn({account, profile}) {
       if(account && account.provider === "credentials") {
@@ -136,9 +141,11 @@ export const options: NextAuthOptions = {
           if(profile) {
             // check if user already exists
             const githubUser  = {...profile} as UserType
-            const userExists = await User.findOne({ email: githubUser.login })
 
-            console.log("githubUser: ", githubUser)
+            console.log('githubUser: ', githubUser)
+
+            // const userExists = await User.findOne({ email: githubUser.login })
+            const userExists = await User.findOne({ username: githubUser.login })
 
             // if not, create a new document and save user in MongoDB
             if (!userExists) {
@@ -163,6 +170,6 @@ export const options: NextAuthOptions = {
   }
 };
 
-const handler = NextAuth(options);
+const handler = NextAuth(authOptions);
 
 export {handler as GET, handler as POST};

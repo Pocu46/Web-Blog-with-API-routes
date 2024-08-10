@@ -6,9 +6,10 @@ import {useMutation} from "@tanstack/react-query";
 import {useRouter} from "next/navigation";
 import {editPost, queryClient, sendPost} from "@/utils/http";
 import Loader from "@/components/Loader";
-import Error from "@/components/ErrorComponent";
-import {editPostProps, SendPostProps} from "@/utils/models";
+import {editPostProps, SendPostProps, sessionUserType} from "@/utils/models";
 import {Transition} from '@headlessui/react';
+import {useSession} from "next-auth/react";
+import ErrorComponent from "@/components/ErrorComponent";
 
 type CreatePostProps = {
   id?: string;
@@ -19,10 +20,6 @@ type CreatePostProps = {
   action?: () => void;
   headingText: string;
   buttonText: string;
-}
-
-function ErrorComponent(props: { reset: () => void, error: null | Error }) {
-  return null;
 }
 
 const CreatePost: React.FC<CreatePostProps> = ({
@@ -43,7 +40,9 @@ const CreatePost: React.FC<CreatePostProps> = ({
   const summaryRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const typeRef = useRef<HTMLSelectElement>(null);
+  const session = useSession()
   const router = useRouter()
+  const sessionUser = session?.data?.user as sessionUserType
 
   useEffect(() => {
     if (summaryValue && textValue && typeValue && summaryRef.current !== null && textRef.current !== null && typeRef.current !== null) {
@@ -108,6 +107,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
     }
 
     mutate({
+      userId: sessionUser?.id,
       summary: summaryVal,
       text: textVal,
       type: typeRef.current?.value
@@ -141,8 +141,9 @@ const CreatePost: React.FC<CreatePostProps> = ({
   if (isError) {
     return (
       <ErrorComponent reset={() => mutate({
-        summary: summaryRef.current?.value,
-        text: textRef.current?.value,
+        userId: sessionUser?.id,
+        summary: summaryVal,
+        text: textVal,
         type: typeRef.current?.value
       })}
              error={error}
