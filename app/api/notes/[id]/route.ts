@@ -7,7 +7,6 @@ import {validateStringLength} from "@/utils/methods";
 
 export const PATCH = async (request: NextRequest, {params}: {params: {id: string}}) => {
   const session = await getServerSession(authOptions)
-
   const { summary, text, type } = await request.json()
 
   if (!session) {
@@ -32,9 +31,9 @@ export const PATCH = async (request: NextRequest, {params}: {params: {id: string
 
     await existingNote.save();
 
-    return new Response("Successfully updated the Prompts", {status: 200});
+    return new Response("Successfully updated the Note", {status: 200});
   } catch (error) {
-    return new Response("Error Updating Prompt", {status: 500});
+    return new Response("Error Updating Note", {status: 500});
   }
 }
 
@@ -61,5 +60,32 @@ export const DELETE = async (request: NextRequest, {params}: {params: {id: strin
     return new Response("Note deleted successfully", { status: 200 })
   } catch (error) {
     return new Response("Error deleting Note", { status: 500 })
+  }
+}
+
+export const PUT = async (request: NextRequest, {params}: {params: {id: string}}) => {
+  const session = await getServerSession(authOptions)
+  const { summary, text, type, isFavorite } = await request.json()
+
+  if (!session) {
+    throw new Error("User not authenticated")
+  }
+
+  try {
+    await connectToDB();
+    // Find the existing prompt by ID
+    const existingNote = await Note.findById(params.id);
+
+    if (!existingNote) {
+      return new Response("Note not found", {status: 404});
+    }
+
+    existingNote.isFavorite = isFavorite
+
+    await existingNote.save();
+
+    return new Response("Successfully updated the Note", {status: 200});
+  } catch (error) {
+    return new Response("Error Updating Note", {status: 500});
   }
 }

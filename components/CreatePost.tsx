@@ -94,12 +94,12 @@ const CreatePost: React.FC<CreatePostProps> = ({
 
     let isValid = true
 
-    if (validateStringLength(summaryVal, 3) || !summaryVal) {
+    if(validateStringLength(summaryVal, 3) || !summaryVal) {
       setSummaryError(true);
       isValid = false
       return
     }
-    if (validateStringLength(textVal, 5) || !textVal) {
+    if(validateStringLength(textVal, 5) || !textVal) {
       setTextError(true);
       isValid = false
       return

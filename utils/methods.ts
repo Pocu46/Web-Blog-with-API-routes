@@ -12,6 +12,5 @@ export const validateStringLength = (value: string | undefined, length: number) 
   if(value && value.trim().length < length) {
     return true
   }
-
   return false
 }
