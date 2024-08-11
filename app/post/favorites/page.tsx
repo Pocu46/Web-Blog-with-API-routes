@@ -1,7 +1,6 @@
 "use client"
 
-import {PostsType} from "@/utils/models";
-import {getPosts} from "@/utils/http";
+import {getFavoritePosts} from "@/utils/http";
 import Post from "@/components/Post";
 import {useQuery} from "@tanstack/react-query";
 import Loader from "@/components/Loader";
@@ -11,28 +10,11 @@ import {Transition} from '@headlessui/react';
 const Favorites = () => {
   const {data, error, isError, isPending, refetch} = useQuery({
     queryKey: ['posts'],
-    queryFn: getPosts,
+    queryFn: getFavoritePosts,
     refetchOnWindowFocus: false,
   })
 
-  const posts: PostsType[] = []
-
-  for (let key in data) {
-    if (data[key].isFavorite) {
-      posts.push({
-        id: key,
-        summary: data[key].summary,
-        text: data[key].text,
-        type: data[key].type,
-        time: data[key].time,
-        isFavorite: data[key].isFavorite
-      })
-    }
-  }
-
-  const postsReverse: PostsType[] = posts.reverse()
-
-  if (data && posts.length === 0 && !error) return (
+  if (data && data.length === 0 && !error) return (
     <Transition
       appear={true}
       show={true}
@@ -45,7 +27,7 @@ const Favorites = () => {
     </Transition>
   )
   if (isPending) return <Loader/>
-  if (!data && !posts.length && isError) return <Error reset={() => refetch()} error={error}/>
+  if (!data && isError) return <Error reset={() => refetch()} error={error}/>
 
   return (
     <Transition
@@ -57,9 +39,9 @@ const Favorites = () => {
       className="w-full min-h-[calc(100vh_-_64px_-_64px)]"
     >
       <ul className="h-auto">
-        {postsReverse.map(post => {
+        {data.map(post => {
           return (
-            <li key={post.id}>
+            <li key={post._id}>
               <Transition.Child
                 enter="ease-linear duration-700 delay-300"
                 enterFrom="opacity-0 scale-80"
@@ -67,7 +49,7 @@ const Favorites = () => {
                 className="w-full"
               >
                 <Post
-                  id={post.id}
+                  id={post._id}
                   time={post.time}
                   summary={post.summary}
                   text={post.text}

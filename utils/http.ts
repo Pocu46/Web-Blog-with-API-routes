@@ -13,7 +13,17 @@ export const queryClient: QueryClient = new QueryClient()
 export const getPosts = async (): Promise<PostsType[] | []> => {
   const res = await fetch("/api/notes/list");
   if (!res.ok) {
-    throw new Error('Failed to fetch data')
+    throw new Error('Failed to fetch Posts')
+  }
+  const data = await res.json()
+
+  return data
+}
+
+export const getFavoritePosts = async (): Promise<PostsType[] | []> => {
+  const res = await fetch("/api/notes/favorites");
+  if (!res.ok) {
+    throw new Error('Failed to fetch Posts')
   }
   const data = await res.json()
 
@@ -45,7 +55,6 @@ export const sendPost = async ({userId, summary, text, type}: SendPostProps) => 
 }
 
 export const postAction = async ({id, summary, text, type, time, isFavorite, method}: postActionProps) => {
-  // const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
   let isFavoriteValue: boolean
 
   if (isFavorite === false) {
@@ -82,7 +91,6 @@ export const postAction = async ({id, summary, text, type, time, isFavorite, met
   }
 
   try {
-    // const response = await fetch(url, payload)
     const response = await fetch(`/api/notes/${id}`, payload)
 
     if (!response?.ok) {
@@ -94,8 +102,6 @@ export const postAction = async ({id, summary, text, type, time, isFavorite, met
 }
 
 export const editPost = async ({id, summary, text, type, isFavorite}: editPostProps) => {
-  // const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
-
   const payload = {
     method: 'PATCH',
     body: JSON.stringify({
@@ -108,7 +114,6 @@ export const editPost = async ({id, summary, text, type, isFavorite}: editPostPr
   }
 
   try {
-    // const response = await fetch(url, payload)
     const response = await fetch(`/api/notes/${id}`, payload)
 
     if (!response?.ok) {
