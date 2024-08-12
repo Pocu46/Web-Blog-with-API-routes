@@ -9,7 +9,12 @@ const Home = () => {
         Add articles and save them to favorites.
       </p>
 
-      <Button text="Start" style="btn-primary mt-5 bg-[#BCC6CC] transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 max-sm:w-[96px] max-sm:h-[26px]" link="/post/create" type="button" />
+      <Button
+        text="Start"
+        style="btn-primary mt-5 bg-[#BCC6CC] transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 max-sm:w-[96px] max-sm:h-[26px]"
+        link="/post/create"
+        type="button"
+      />
     </div>
   )
 }
