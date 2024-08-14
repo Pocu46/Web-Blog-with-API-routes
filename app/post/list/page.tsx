@@ -16,7 +16,7 @@ const Posts = () => {
   const [search, setSearch] = useState<string>('')
   const searchRef = useRef<HTMLInputElement>(null)
   const {data, error, isError, isPending, refetch} = useQuery({
-    queryKey: ['posts'],
+    queryKey: ['list'],
     queryFn: getPosts,
     refetchOnWindowFocus: false,
   })

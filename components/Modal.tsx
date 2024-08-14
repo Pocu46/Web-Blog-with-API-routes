@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import ClientPortal from "@/components/ClientPortal";
 
 type ModalProps = {
@@ -10,47 +10,14 @@ type ModalProps = {
 }
 
 const Modal: React.FC<ModalProps> = ({children, style, open, onClose, root}) => {
-  const dialogRef = useRef<HTMLDialogElement | null>(null)
-
-  const handleClickOutside = (event: MouseEvent) => {
-    const target = (event.target as HTMLElement).className
-
-    if (target.includes('modal')) {
-      dialogRef.current?.close()
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }
-
-  useEffect(() => {
-    if (open) {
-      if (dialogRef.current) {
-        dialogRef.current.showModal();
-        document.addEventListener("click", handleClickOutside);
-      }
-    } else {
-      if (dialogRef.current) {
-        dialogRef.current.close();
-        document.removeEventListener("click", handleClickOutside);
-      }
-    }
-
-    return () => {
-      if (dialogRef.current) {
-        dialogRef.current.close();
-        document.removeEventListener("click", handleClickOutside);
-      }
-    };
-  }, [open]);
-
   return (
     <ClientPortal show={open} root={root}>
-      <dialog
+      {open && <div
         className={style}
-        ref={dialogRef}
-        onClose={onClose}
+        onClick={onClose}
       >
         {children}
-      </dialog>
+      </div>}
     </ClientPortal>
   )
 }

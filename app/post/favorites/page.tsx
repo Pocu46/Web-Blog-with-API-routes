@@ -9,7 +9,7 @@ import {Transition} from '@headlessui/react';
 
 const Favorites = () => {
   const {data, error, isError, isPending, refetch} = useQuery({
-    queryKey: ['posts'],
+    queryKey: ['list'],
     queryFn: getFavoritePosts,
     refetchOnWindowFocus: false,
   })

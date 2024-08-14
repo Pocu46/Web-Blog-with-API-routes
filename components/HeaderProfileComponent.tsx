@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {useSession} from "next-auth/react";
-import {sessionUserType} from "@/utils/models";
 
 type HeaderProfileComponentProps = {
   id: string;

@@ -68,7 +68,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
     onSuccess: () => {
       setIsSpinning(true)
       queryClient.invalidateQueries({
-        queryKey: ['posts'],
+        queryKey: ['list'],
         exact: true
       });
       router.replace('/post/posts')
@@ -83,7 +83,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
     mutationFn: editPost,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['posts'],
+        queryKey: ['list'],
         exact: true
       });
     }

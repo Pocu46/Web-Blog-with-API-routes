@@ -22,11 +22,16 @@ const Header = () => {
     document.body.style.overflow = ''
   }
 
+  const burgerButtonAcrion = () => {
+    if(isOpened) burgerClose()
+    if(!isOpened) burgerOpen()
+  }
+
   return (
     <header className="flex justify-between items-center bg-[#BCC6CC] w-full h-16 relative">
       <div
         className="burger-wrapper"
-        onClick={burgerOpen}
+        onClick={burgerButtonAcrion}
       >
         <span className="h-[3px] w-[26px] bg-[white]"/>
         <span className={isOpened ? "h-[3px] w-[26px] bg-[white] my-2" : "burger-line"}/>
@@ -36,7 +41,7 @@ const Header = () => {
       {sessionUser && <HeaderProfileComponent id={sessionUser.id} image={sessionUser?.image} username={sessionUser?.username}/>}
 
       <Modal
-        style="ml-0 mr-auto mt-16 mb-0 w-[400px] h-[calc(100vh_-_64px)] bg-[#5d5b76] relative left-0 bottom-0 modal backdrop:bg-[rgba(0,0,0,0.2)] max-sm:w-full z-[5]"
+        style="w-full h-[calc(100vh_-_64px)] bg-[rgba(0,0,0,0.2)] z-[5] fixed left-0 bottom-0"
         open={isOpened}
         onClose={burgerClose}
         root="modalId"
