@@ -33,7 +33,7 @@ const Header = () => {
         <span className="h-[3px] w-[26px] bg-[white]"/>
       </div>
 
-      {sessionUser && <HeaderProfileComponent image={sessionUser?.image} username={sessionUser?.username}/>}
+      {sessionUser && <HeaderProfileComponent id={sessionUser.id} image={sessionUser?.image} username={sessionUser?.username}/>}
 
       <Modal
         style="ml-0 mr-auto mt-16 mb-0 w-[400px] h-[calc(100vh_-_64px)] bg-[#5d5b76] relative left-0 bottom-0 modal backdrop:bg-[rgba(0,0,0,0.2)] max-sm:w-full z-[5]"

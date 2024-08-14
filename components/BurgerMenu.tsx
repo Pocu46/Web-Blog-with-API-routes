@@ -31,9 +31,9 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
       {sessionUser && <div className="flex flex-col justify-center items-center w-full p-3">
         {sessionUser?.image
           ? <img src={sessionUser?.image} alt="Profile Image"
-                 className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-blue-700"/>
+                 className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-white"/>
           : <Image
-            className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-blue-700"
+            className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-white"
             src="/defaultUserIcon.png"
             alt="Profile Image"
             height={126}
@@ -47,7 +47,8 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
       </div>}
 
       <nav className="m-auto mt-5 flex justify-center items-center flex-col py-2">
-      <Link onClick={action} className={pathname == "/post/profile" ? active : style} href="/profile">Profile</Link>
+        {/*<Link onClick={action} className={pathname == "/post/profile" ? active : style} href="/profile">Profile</Link>*/}
+        <Link onClick={action} className={pathname == "/post/profile" ? active : style} href={`/profile/${sessionUser.id}`}>Profile</Link>
         <Link onClick={action} href="/" className={pathname == "/" ? active : style}>Home</Link>
         <Link onClick={action} className={pathname == "/post/create" ? active : style} href="/post/create">Create Post</Link>
         <Link onClick={action} className={pathname == "/post/posts" ? active : style} href="/post/posts">Posts</Link>

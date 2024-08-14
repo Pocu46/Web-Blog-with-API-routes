@@ -14,9 +14,9 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({email, username, ima
     <div
       className={style}>
       {image
-        ? <img src={image} alt="Profile Image" className="bg-white rounded-[50%] h-[256px] w-[256px] border-4 border-solid border-blue-700"/>
+        ? <img src={image} alt="Profile Image" className="bg-white rounded-[50%] h-[256px] w-[256px] border-4 border-solid border-white"/>
         : <Image
-          className="bg-white rounded-[50%] h-[256px] w-[256px] border-4 border-solid border-blue-700"
+          className="bg-white rounded-[50%] h-[256px] w-[256px] border-4 border-solid border-white"
           src="/defaultUserIcon.png"
           alt="Profile Image"
           height={256}

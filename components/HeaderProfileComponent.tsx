@@ -1,20 +1,23 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import {useSession} from "next-auth/react";
+import {sessionUserType} from "@/utils/models";
 
 type HeaderProfileComponentProps = {
+  id: string;
   image: string | undefined;
   username: string | undefined;
 }
 
-const HeaderProfileComponent: React.FC<HeaderProfileComponentProps> = ({image, username}) => {
+const HeaderProfileComponent: React.FC<HeaderProfileComponentProps> = ({id, image, username}) => {
   return(
-    <Link href="/profile" className="flex justify-center items-center gap-2 px-3">
+    <Link href={`/profile/${id}`} className="flex justify-center items-center gap-2 px-3">
       {image
         ? <img src={image} alt="Profile Image"
-               className="bg-white rounded-[50%] h-[36px] w-[36px] border-4 border-solid border-blue-700"/>
+               className="bg-white rounded-[50%] h-[36px] w-[36px] border-4 border-solid border-white"/>
         : <Image
-          className="bg-white rounded-[50%] h-[36px] w-[36px] border-4 border-solid border-blue-700"
+          className="bg-white rounded-[50%] h-[36px] w-[36px] border-4 border-solid border-white"
           src="/defaultUserIcon.png"
           alt="Profile Image"
           height={26}
