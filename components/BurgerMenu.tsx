@@ -23,7 +23,7 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
       enter="ease-linear duration-700"
       enterFrom="opacity-0 scale-80"
       enterTo="opacity-100 scale-100"
-      className="w-[400px] h-full bg-[#5d5b76] left-0 top-0  max-sm:w-full z-[5] overflow-x-auto"
+      className="w-[400px] h-full bg-[#5d5b76] left-0 top-0  max-sm:w-full z-[5] overflow-x-hidden overflow-y-auto"
     >
       <h2 className="py-3 bg-[#4a535c] text-[white] mt-3 text-center text-2xl font-[200] leading-[1]">Create your
         posts to

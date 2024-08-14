@@ -13,7 +13,7 @@ const LoginComponent = () => {
       enter="ease-linear duration-700"
       enterFrom="opacity-0 scale-80"
       enterTo="opacity-100 scale-100"
-      className="w-full h-[calc(100vh_-_64px)] flex justify-start flex-col items-start pt-[64px]"
+      className="w-full h-[100vh] flex justify-start flex-col items-start pt-[64px]"
     >
       <LoginForm />
       <LoginViaApi />

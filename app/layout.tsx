@@ -14,15 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
-  // const session = await getServerSession(options);
-
-  // console.log(session)
+  const session = await getServerSession(options)
 
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning={true} >
         <Providers>
-          <Header/>
+          {session?.user && <Header/>}
             <div className="m-auto w-full lg:w-[960px]">
               {children}
             </div>

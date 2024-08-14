@@ -138,7 +138,7 @@ const RegistrationComponent = () => {
       enter="ease-linear duration-700"
       enterFrom="opacity-0 scale-80"
       enterTo="opacity-100 scale-100"
-      className="w-full h-[calc(100vh_-_64px)] flex justify-center pt-[64px]"
+      className="w-full h-[100vh] flex justify-center pt-[64px]"
     >
       <form className="w-full h-auto" onSubmit={registrationHandler}>
         <h2 className="text-center text-3xl font-[500] leading-[1.2] mb-2">Registration</h2>
