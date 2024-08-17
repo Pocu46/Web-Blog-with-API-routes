@@ -5,7 +5,7 @@ import {Transition} from "@headlessui/react";
 import Button from "@/UI/Button";
 import Input from "@/UI/Input";
 import Link from "next/link";
-import {validateEmail, validatePassword} from "@/utils/methods";
+import {validateEmail, validatePassword, validateStringLength} from "@/utils/methods";
 import {userRegistration} from "@/utils/http";
 import {useMutation} from "@tanstack/react-query";
 import {registrationProps} from "@/utils/models";
@@ -51,7 +51,7 @@ const RegistrationComponent = () => {
       setLoginError(true)
       isValid = false
     }
-    if(userNameVal.trim().length < 3) {
+    if(validateStringLength(userNameVal, 3)) {
       setUserNameError(true)
       isValid = false
     }
@@ -138,7 +138,7 @@ const RegistrationComponent = () => {
       enter="ease-linear duration-700"
       enterFrom="opacity-0 scale-80"
       enterTo="opacity-100 scale-100"
-      className="w-full h-[100vh] flex justify-center pt-[64px]"
+      className="w-full h-[100vh] flex justify-center pt-[64px] min-h-[calc(100vh_-_64px)]"
     >
       <form className="w-full h-auto" onSubmit={registrationHandler}>
         <h2 className="text-center text-3xl font-[500] leading-[1.2] mb-2">Registration</h2>

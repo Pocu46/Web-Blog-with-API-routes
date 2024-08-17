@@ -61,6 +61,13 @@ export type registrationProps = {
   confirmPassword: string;
 }
 
+export type editUser = {
+  email: string;
+  userName: string;
+  password: string;
+  image?: string;
+}
+
 export type sessionUserType = {
   id: string;
   username: string;

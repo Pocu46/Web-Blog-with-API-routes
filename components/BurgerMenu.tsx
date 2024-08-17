@@ -30,29 +30,29 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
         save them!</h2>
 
       {sessionUser && <div className="flex flex-col justify-center items-center w-full p-3">
-        {sessionUser?.image
-          ? <img src={sessionUser?.image} alt="Profile Image"
-                 className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-white"/>
-          : <Image
-            className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-white"
-            src="/defaultUserIcon.png"
-            alt="Profile Image"
-            height={126}
-            width={126}
-          />}
+          <Image
+              className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-white"
+              src={sessionUser?.image ? sessionUser?.image : "/defaultUserIcon.png"}
+              alt="Profile Image"
+              height={256}
+              width={256}
+          />
           <p className="text-2xl w-full bg-white rounded-lg p-2 my-3 text-center text-blue-700 overflow-x-hidden">
-            <b>
-              {sessionUser?.username}
-            </b>
+              <b>
+                {sessionUser?.username}
+              </b>
           </p>
       </div>}
 
       <nav className="m-auto mt-5 flex justify-center items-center flex-col py-2">
-        <Link onClick={action} className={pathname == "/post/profile" ? active : style} href={`/profile/${sessionUser.id}`}>Profile</Link>
+        <Link onClick={action} className={pathname == "/post/profile" ? active : style}
+              href={`/profile/${sessionUser.id}`}>Profile</Link>
         <Link onClick={action} href="/" className={pathname == "/" ? active : style}>Home</Link>
         <Link onClick={action} className={pathname == "/post/list" ? active : style} href="/post/list">Posts</Link>
-        <Link onClick={action} className={pathname == "/post/create" ? active : style} href="/post/create">Create Post</Link>
-        <Link onClick={action} className={pathname == "/post/favorites" ? active : style} href="/post/favorites">Favorites</Link>
+        <Link onClick={action} className={pathname == "/post/create" ? active : style} href="/post/create">Create
+          Post</Link>
+        <Link onClick={action} className={pathname == "/post/favorites" ? active : style}
+              href="/post/favorites">Favorites</Link>
 
         {sessionUser && <div className="h-[146px] w-full flex justify-center items-center">
             <button onClick={() => signOut()} className={style}>Logout</button>

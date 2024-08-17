@@ -13,7 +13,7 @@ type InputProps = {
 
 const Input: React.FC<InputProps> = ({id, label, placeholder, state, type,  changeHandler, error, errorMessage}) => {
   return (
-    <div className="my-2 flex flex-col">
+    <div className="my-2 flex flex-col w-full">
       <label htmlFor={id} className="mb-2">{label}</label>
       <input
         id={id}
