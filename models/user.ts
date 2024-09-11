@@ -7,18 +7,20 @@ const userSchema = new Schema({
     // required: [true, 'Email is required!'],
     // match: [/\S+@\S+\.\S+/, "Email should have '@' symbol"]
   },
-  username: {
+  name: {
     type: String,
-    unique: [true, 'Username already exists!'],
-    required: [true, 'Username is required!'],
-    match: [/^.{3,}$/, "Username invalid, it should contain at least 3 letters and be unique!"]
+    unique: [true, 'Name already exists!'],
+    required: [true, 'Name is required!'],
+    match: [/^.{3,}$/, "Name invalid, it should contain at least 3 letters and be unique!"]
   },
   password: {
     type: String,
     // required: [true, 'Password is required!'],
   },
   image: {
-    type: String
+    // type: String
+    imageName: {type: String},
+    imageLink: {type: String},
   }
 });
 

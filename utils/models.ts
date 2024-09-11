@@ -1,7 +1,7 @@
 type PostCrator = {
   _id: string;
   email: string;
-  username: string;
+  name: string;
 }
 
 export type PostsType = {
@@ -56,21 +56,22 @@ export type editPostProps = {
 
 export type registrationProps = {
   email: string;
-  userName: string;
+  name: string;
   password: string;
   confirmPassword: string;
 }
 
-export type editUser = {
-  email: string;
-  userName: string;
-  password: string;
-  image?: string;
-}
-
 export type sessionUserType = {
   id: string;
-  username: string;
+  name: string;
   email?: string;
-  image?: string;
+  image?: {
+    imageName: string;
+    imageLink: string;
+  };
+}
+
+export type EditUser = {
+  formData: FormData;
+  id: string;
 }

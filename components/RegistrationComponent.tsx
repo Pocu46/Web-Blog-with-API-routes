@@ -16,8 +16,8 @@ import ErrorComponent from "@/components/ErrorComponent";
 const RegistrationComponent = () => {
   const [loginVal, setLoginVal] = useState<string>('')
   const [loginError, setLoginError] = useState(false)
-  const [userNameVal, setUserNameVal] = useState<string>('')
-  const [userNameError, setUserNameError] = useState(false)
+  const [nameVal, setNameVal] = useState<string>('')
+  const [nameError, setNameError] = useState(false)
   const [passwordVal, setPasswordVal] = useState<string>('')
   const [passwordValError, setPasswordError] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState<string>('')
@@ -30,6 +30,7 @@ const RegistrationComponent = () => {
     onSuccess: async () => {
       const res = await signIn('credentials', {
         email: loginVal,
+        // name: nameVal,
         password: passwordVal,
         redirect: false
       })
@@ -47,23 +48,23 @@ const RegistrationComponent = () => {
 
     let isValid = true
 
-    if(!validateEmail(loginVal.trim())) {
+    if(!validateEmail(loginVal)) {
       setLoginError(true)
       isValid = false
     }
-    if(validateStringLength(userNameVal, 3)) {
-      setUserNameError(true)
+    if(validateStringLength(nameVal, 3)) {
+      setNameError(true)
       isValid = false
     }
-    if(!validatePassword(passwordVal.trim())) {
+    if(!validatePassword(passwordVal)) {
       setPasswordError(true)
       isValid = false
     }
-    if(!validatePassword(confirmPassword.trim())) {
+    if(!validatePassword(confirmPassword)) {
       setConfirmPasswordError(true)
       isValid = false
     }
-    if(passwordVal && confirmPassword && passwordVal.trim() !== confirmPassword.trim()) {
+    if(passwordVal && confirmPassword && passwordVal !== confirmPassword) {
       setConfirmPasswordError(true)
       isValid = false
     }
@@ -72,7 +73,7 @@ const RegistrationComponent = () => {
       try {
         mutate({
           email: loginVal,
-          userName: userNameVal,
+          name: nameVal,
           password: passwordVal,
           confirmPassword: confirmPassword
         })
@@ -83,28 +84,28 @@ const RegistrationComponent = () => {
   }
 
   useEffect(() => {
-    if(validateEmail(loginVal.trim())) {
+    if(validateEmail(loginVal)) {
       setLoginError(false)
     }
-    if(userNameVal.trim().length >= 3) {
-      setUserNameError(false)
+    if(!validateStringLength(nameVal, 3)) {
+      setNameError(false)
     }
-    if(validatePassword(passwordVal.trim())) {
+    if(validatePassword(passwordVal)) {
       setPasswordError(false)
     }
-    if(validatePassword(confirmPassword.trim())) {
+    if(validatePassword(confirmPassword)) {
       setConfirmPasswordError(false)
     }
-    if(validatePassword(passwordVal) && validatePassword(confirmPassword) && passwordVal.trim() === confirmPassword.trim()) {
+    if(validatePassword(passwordVal) && validatePassword(confirmPassword) && passwordVal === confirmPassword) {
       setConfirmPasswordError(false)
     }
-  }, [loginVal, userNameVal, passwordVal, confirmPassword])
+  }, [loginVal, nameVal, passwordVal, confirmPassword])
 
   const loginChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginVal(event.target.value)
   }
   const nicknameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserNameVal(event.target.value)
+    setNameVal(event.target.value)
   }
   const passwordChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordVal(event.target.value)
@@ -121,7 +122,7 @@ const RegistrationComponent = () => {
           () => {
             mutate({
               email: loginVal,
-              userName: userNameVal,
+              name: nameVal,
               password: passwordVal,
               confirmPassword: confirmPassword
             })
@@ -154,13 +155,13 @@ const RegistrationComponent = () => {
           errorMessage="Email should have '@' symbol"
         />
         <Input
-          id="registrationUserName"
+          id="registrationname"
           label="User Name *"
           placeholder="John Doe"
-          state={userNameVal}
+          state={nameVal}
           type="text"
           changeHandler={nicknameChangeHandler}
-          error={userNameError}
+          error={nameError}
           errorMessage="User Name field should have at least 3 letters"
         />
         <Input

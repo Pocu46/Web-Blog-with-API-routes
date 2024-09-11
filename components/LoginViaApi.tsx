@@ -12,6 +12,7 @@ const ButtonContent = ({image, text}: {image: string; text: string}) => {
         alt="Google login button"
         width={25}
         height={25}
+        className="rounded-[12px]"
       />
       {text}
     </>

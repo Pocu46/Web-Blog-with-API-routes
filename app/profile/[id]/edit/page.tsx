@@ -11,8 +11,9 @@ const UserEdit = async () => {
     <EditProfileComponent
       id={sessionUser.id}
       email={sessionUser.email}
-      username={sessionUser.username}
-      image={sessionUser.image}
+      name={sessionUser.name}
+      image={sessionUser.image?.imageLink}
+      imageName={sessionUser.image?.imageName ? sessionUser.image?.imageName : ""}
     />
   )
 }

@@ -24,6 +24,7 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
       enterFrom="opacity-0 scale-80"
       enterTo="opacity-100 scale-100"
       className="w-[400px] h-full bg-[#5d5b76] left-0 top-0  max-sm:w-full z-[5] overflow-x-hidden overflow-y-auto"
+      onClick={(event) => event.stopPropagation()}
     >
       <h2 className="py-3 bg-[#4a535c] text-[white] mt-3 text-center text-2xl font-[200] leading-[1]">Create your
         posts to
@@ -32,14 +33,14 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
       {sessionUser && <div className="flex flex-col justify-center items-center w-full p-3">
           <Image
               className="bg-white rounded-[50%] h-[126px] w-[126px] border-4 border-solid border-white"
-              src={sessionUser?.image ? sessionUser?.image : "/defaultUserIcon.png"}
+              src={sessionUser?.image?.imageLink ? sessionUser?.image.imageLink : "/defaultUserIcon.png"}
               alt="Profile Image"
               height={256}
               width={256}
           />
           <p className="text-2xl w-full bg-white rounded-lg p-2 my-3 text-center text-blue-700 overflow-x-hidden">
               <b>
-                {sessionUser?.username}
+                {sessionUser?.name}
               </b>
           </p>
       </div>}

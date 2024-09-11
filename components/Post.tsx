@@ -121,7 +121,7 @@ const Post: React.FC<PostProps> = ({id, summary, time, type, text, isFavorite}) 
       </div>
 
       <Modal
-        style="h-full w-full z-[5] bg-[rgba(0,0,0,0.4)] fixed top-0 left-0 z-[5] flex justify-center items-start pt-[128px]"
+        style="h-full w-full z-[5] bg-[rgba(0,0,0,0.4)] fixed top-0 left-0 flex justify-center items-start pt-[128px]"
         open={isOpened}
         onClose={editClose}
         root="modalId"

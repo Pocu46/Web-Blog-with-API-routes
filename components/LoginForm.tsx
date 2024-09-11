@@ -18,11 +18,11 @@ const LoginForm = () => {
 
     let isValid = true
 
-    if (!validateEmail(loginVal.trim())) {
+    if (!validateEmail(loginVal)) {
       setLoginError(true)
       isValid = false
     }
-    if (!validatePassword(passwordVal.trim())) {
+    if (!validatePassword(passwordVal)) {
       setPasswordError(true)
       isValid = false
     }
@@ -33,10 +33,10 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-      if (validateEmail(loginVal.trim())) {
+      if (validateEmail(loginVal)) {
         setLoginError(false)
       }
-      if (validatePassword(passwordVal.trim())) {
+      if (validatePassword(passwordVal)) {
         setPasswordError(false)
       }
     }, [loginVal, passwordVal]

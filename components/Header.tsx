@@ -38,7 +38,7 @@ const Header = () => {
         <span className="h-[3px] w-[26px] bg-[white]"/>
       </div>
 
-      {sessionUser && <HeaderProfileComponent id={sessionUser.id} image={sessionUser?.image} username={sessionUser?.username}/>}
+      {sessionUser && <HeaderProfileComponent id={sessionUser.id} image={sessionUser?.image} name={sessionUser?.name}/>}
 
       <Modal
         style="w-full h-[calc(100vh_-_64px)] bg-[rgba(0,0,0,0.2)] z-[5] fixed left-0 bottom-0"

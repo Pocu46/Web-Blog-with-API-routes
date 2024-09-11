@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import {validateEmail, validatePassword, validateStringLength} from "@/utils/methods";
 
 export const POST = async (request: NextRequest) => {
-  const {email, userName, password, confirmPassword} = await request.json()
+  const {email, name, password, confirmPassword} = await request.json()
 
   await connectToDB()
 
@@ -19,13 +19,13 @@ export const POST = async (request: NextRequest) => {
   const passwordMatched = validatePassword(password)
 
   // if not, create a new document and save user in MongoDB
-  if (!userExists && validateEmail(email) && validateStringLength(userName, 3) && (password === confirmPassword) && passwordMatched) {
+  if (!userExists && validateEmail(email) && !validateStringLength(name, 3) && (password === confirmPassword) && passwordMatched) {
     const hashedPassword = await bcrypt.hash(password, 8)
 
     try {
       await User.create({
         email,
-        username: userName,
+        name,
         password: hashedPassword
       });
     } catch (error) {

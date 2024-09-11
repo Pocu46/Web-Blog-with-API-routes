@@ -12,12 +12,22 @@ type UserType = NextAuthUser & {
   id?: string;
   _id?: string;
   email: string;
-  username: string;
+  name: string;
   password: string;
   login?: string;
   avatar_url?: string;
   picture?: string;
+  image: {
+    imageName: string;
+    imageLink: string;
+  }
 };
+
+type updatedUserType = {
+  email: string;
+  name: string;
+  picture: string;
+}
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -48,8 +58,6 @@ export const authOptions: NextAuthOptions = {
           // check if user already exists
           const user = await User.findOne({email: credentials.email}) as UserType;
 
-          console.log("user: ", user)
-
           if (!user) {
             return null;
           }
@@ -60,7 +68,7 @@ export const authOptions: NextAuthOptions = {
             const userWithoutPassword = {
               id: user["_id"]?.toString(),
               email: user.email,
-              username: user.username
+              name: user.name
             }
 
             return userWithoutPassword as NextAuthUser;
@@ -80,86 +88,75 @@ export const authOptions: NextAuthOptions = {
     newUser: '/auth/copyrights'
   },
   callbacks: {
-    async session({session , token}) {
-      // console.log(session.user)
-      // let sessionUser
-      //
-      // if(session.user && session.user.email) {
-      //   sessionUser = await User.findOne({ email: session?.user?.email })
-      // } else {
-      //   sessionUser = await User.findOne({ username: session?.user?.name })
-      // }
-
-      const sessionUser = await User.findOne({ email: session?.user?.email })
-
-      const userWithId = {
+    async session({session, token}) {
+      const sessionUser = await User.findOne({name: session?.user?.name})
+      const updatedUser = {
+        ...session.user,
         id: sessionUser._id.toString(),
-        email: sessionUser.email,
-        username: sessionUser.username,
         image: sessionUser.image
       }
-      session.user = userWithId
+      session.user = updatedUser
 
       return session;
     },
     async signIn({account, profile}) {
-      if(account && account.provider === "credentials") {
+      if (account && account.provider === "credentials") {
         return true
       }
-      if(account && account.provider === "google") {
+      if (account && account.provider === "google") {
         try {
           await connectToDB();
 
-          if(profile) {
+          if (profile) {
             // check if user already exists
-            const userExists = await User.findOne({ email: profile.email });
-            const googleUser = {...userExists} as UserType
+            const userExists = await User.findOne({email: profile.email});
             // if not, create a new document and save user in MongoDB
-            if(profile?.email) {
-              if (!userExists && profile.email && validateEmail(profile?.email)) {
-                await User.create({
-                  email: googleUser.email,
-                  username: googleUser?.name,
-                  image: googleUser.picture,
-                });
-              }
-            }
-
-            return true
-          }
-        } catch (error: Error | unknown) {
-          if(error) {
-            console.log("Error checking if user exists: ", error)
-            return false
-          }
-        }
-      }
-      if(account && account.provider === "github") {
-        try {
-          await connectToDB();
-
-          if(profile) {
-            // check if user already exists
-            const githubUser  = {...profile} as UserType
-
-            console.log('githubUser: ', githubUser)
-
-            // const userExists = await User.findOne({ email: githubUser.login })
-            const userExists = await User.findOne({ username: githubUser.login })
-
-            // if not, create a new document and save user in MongoDB
-            if (!userExists) {
+            if (!userExists && profile.email && validateEmail(profile?.email)) {
+              const updatedUser = {...profile} as updatedUserType
               await User.create({
-                email: githubUser.login,
-                username: githubUser.login,
-                image: githubUser.avatar_url,
+                email: updatedUser.email,
+                name: updatedUser.name,
+                image: {
+                  imageName: updatedUser.picture,
+                  imageLink: updatedUser.picture
+                }
               });
             }
 
             return true
           }
         } catch (error: Error | unknown) {
-          if(error) {
+          if (error) {
+            console.log("Error checking if user exists: ", error)
+            return false
+          }
+        }
+      }
+      if (account && account.provider === "github") {
+        try {
+          await connectToDB();
+
+          if (profile) {
+            // check if user already exists
+            const githubUser = {...profile} as UserType
+            const userExists = await User.findOne({name: githubUser.login})
+
+            // if not, create a new document and save user in MongoDB
+            if (!userExists) {
+              await User.create({
+                email: githubUser.login,
+                name: githubUser.login,
+                image: {
+                  imageName: githubUser.avatar_url,
+                  imageLink: githubUser.avatar_url
+                }
+              });
+            }
+
+            return true
+          }
+        } catch (error: Error | unknown) {
+          if (error) {
             console.log("Error checking if user exists: ", error);
             return false
           }

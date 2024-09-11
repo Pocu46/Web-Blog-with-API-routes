@@ -1,8 +1,7 @@
 import {
-  editPostProps,
+  editPostProps, EditUser,
   postActionProps,
-  PostsType,
-  registrationProps,
+  PostsType, registrationProps,
   SendPostProps
 } from "@/utils/models";
 import moment from "moment";
@@ -124,7 +123,7 @@ export const editPost = async ({id, summary, text, type, isFavorite}: editPostPr
   }
 }
 
-export const userRegistration = async ({email, userName, password, confirmPassword}: registrationProps) => {
+export const userRegistration = async ({email, name, password, confirmPassword}: registrationProps) => {
   try {
     const response = await fetch('/api/registration', {
       method: 'POST',
@@ -133,7 +132,7 @@ export const userRegistration = async ({email, userName, password, confirmPasswo
       },
       body: JSON.stringify({
         email,
-        userName,
+        name,
         password,
         confirmPassword
       })
@@ -141,6 +140,21 @@ export const userRegistration = async ({email, userName, password, confirmPasswo
 
     if (response.status !== 201) {
       throw new Error("User registration failed")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userProfileImageUpdate = async ({formData, id}: EditUser) => {
+  try {
+    const response = await fetch(`/api/profile/${id}/edit`, {
+      method: 'PATCH',
+      body: formData
+    })
+
+    if (response.status !== 200) {
+      throw new Error("User Profile Image update failed")
     }
   } catch (error) {
     console.log(error)

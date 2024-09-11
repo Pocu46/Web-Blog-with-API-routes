@@ -1,10 +1,10 @@
-import mongoose, { Schema, model, models } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 
 const noteSchema = new Schema({
   creator: {
     required: [true, 'id is required!'],
-    // type: Schema.Types.ObjectId,
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
+    // type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
   summary: {
