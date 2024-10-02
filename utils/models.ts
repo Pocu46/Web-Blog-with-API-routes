@@ -75,3 +75,10 @@ export type EditUser = {
   formData: FormData;
   id: string;
 }
+
+export type EditUserData = {
+  email: string | undefined;
+  name: string;
+  password: string;
+  id: string;
+}

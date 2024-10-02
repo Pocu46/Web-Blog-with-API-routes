@@ -2,25 +2,29 @@ import React from "react";
 import Button from "@/UI/Button";
 import Image from "next/image";
 import {useMutation} from "@tanstack/react-query";
-import {EditUser} from "@/utils/models";
+import {EditUser, sessionUserType} from "@/utils/models";
 import {userProfileImageUpdate} from "@/utils/http";
+import {useSession} from "next-auth/react";
 
 type AddPhotoComponentProps = {
   onClose: () => void;
-  image: string | {imageName: string; imageLink: string}  | undefined;
-  imageName: string | undefined;
-  id: string;
 }
 
-const AddPhotoComponent: React.FC<AddPhotoComponentProps> = ({onClose, image, imageName, id}) => {
-  const [newProfilePhotoUrl, setNewProfilePhotoUrl] = React.useState<string | {imageName: string; imageLink: string}  | undefined>(image)
-  const [newProfilePhotoName, setNewProfilePhotoName] = React.useState<string>(imageName ? imageName : "")
+const AddPhotoComponent: React.FC<AddPhotoComponentProps> = ({onClose}) => {
+  const {data: session, update} = useSession()
+  const sessionUser = session?.user as sessionUserType
+
+  const [newProfilePhotoUrl, setNewProfilePhotoUrl] = React.useState<string | undefined>(sessionUser?.image?.imageLink)
   const [newProfilePhoto, setNewProfilePhoto] = React.useState<File | undefined>()
 
   const {mutate, isError, error} = useMutation<void, Error, EditUser, unknown>({
-    mutationKey: ['editUser'],
+    mutationKey: ['editUserPhoto'],
     mutationFn: userProfileImageUpdate,
     onSuccess: async () => {
+      await update({
+        image: newProfilePhotoUrl
+      })
+
       onClose()
     }
   })
@@ -29,19 +33,22 @@ const AddPhotoComponent: React.FC<AddPhotoComponentProps> = ({onClose, image, im
     const file = event.target.files?.[0]
     if (file) {
       setNewProfilePhotoUrl(URL.createObjectURL(file))
-      setNewProfilePhotoName(file.name)
       setNewProfilePhoto(file)
     }
   }
 
   const saveNewImageHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    event.stopPropagation()
 
     const formData = new FormData()
     if(newProfilePhoto) formData.append("image", newProfilePhoto)
-    formData.append("imageName", newProfilePhotoName)
 
-    mutate({formData, id})
+    try {
+      mutate({formData, id: sessionUser?.id})
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

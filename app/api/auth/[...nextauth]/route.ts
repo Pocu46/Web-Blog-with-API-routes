@@ -88,16 +88,24 @@ export const authOptions: NextAuthOptions = {
     newUser: '/auth/copyrights'
   },
   callbacks: {
-    async session({session, token}) {
+    async session({session, token, trigger, newSession}) {
       const sessionUser = await User.findOne({name: session?.user?.name})
       const updatedUser = {
         ...session.user,
-        id: sessionUser._id.toString(),
+        id: sessionUser?.id,
         image: sessionUser.image
       }
       session.user = updatedUser
 
       return session;
+    },
+    async jwt({token, trigger, session, profile}) {
+      if(trigger === "update" && session.name) {
+        if(session.email) token.email = session.email
+        if(session.name) token.name = session.name
+        if(session.image) token.picture = session.image
+      }
+      return token
     },
     async signIn({account, profile}) {
       if (account && account.provider === "credentials") {

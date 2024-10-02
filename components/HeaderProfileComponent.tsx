@@ -4,10 +4,7 @@ import Link from "next/link";
 
 type HeaderProfileComponentProps = {
   id: string;
-  image: {
-    imageName: string;
-    imageLink: string;
-  };
+  image: string | undefined;
   name: string | undefined;
 }
 
@@ -16,7 +13,7 @@ const HeaderProfileComponent: React.FC<HeaderProfileComponentProps> = ({id, imag
     <Link href={`/profile/${id}`} className="flex justify-center items-center gap-2 px-3">
       <Image
         className="bg-white rounded-[50%] h-[36px] w-[36px] border-4 border-solid border-white"
-        src={image?.imageLink ? image?.imageLink : "/defaultUserIcon.png"}
+        src={image ? image : "/defaultUserIcon.png"}
         alt="Profile Image"
         height={256}
         width={256}

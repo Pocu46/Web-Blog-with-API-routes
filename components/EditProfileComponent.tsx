@@ -10,40 +10,35 @@ import {useMutation} from "@tanstack/react-query";
 import {useRouter} from "next/navigation";
 import Modal from "@/components/Modal";
 import AddPhotoComponent from "@/components/AddPhotoComponent";
-// import {userUpdate} from "@/utils/http";
-import {EditUser} from "@/utils/models";
+import {EditUserData, sessionUserType} from "@/utils/models";
+import {userUpdate} from "@/utils/http";
+import {useSession} from "next-auth/react";
 
-type EditProfileComponentProps = {
-  id: string;
-  email: string | undefined;
-  name: string;
-  image: string | { imageName: string; imageLink: string } | undefined;
-  imageName: string;
-}
+const EditProfileComponent = () => {
+  const {data: session, update} = useSession()
+  const sessionUser = session?.user as sessionUserType
 
-const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, name, image, imageName}) => {
-  const [loginVal, setLoginVal] = useState<string | undefined>(email)
+  const [loginVal, setLoginVal] = useState<string | undefined>(sessionUser?.email)
   const [loginError, setLoginError] = useState(false)
-  const [nameVal, setnameVal] = useState<string>(name)
-  const [nameError, setnameError] = useState(false)
+  const [nameVal, setNameVal] = useState<string>(sessionUser?.name)
+  const [nameError, setNameError] = useState(false)
   const [passwordVal, setPasswordVal] = useState<string>('')
   const [passwordValError, setPasswordError] = useState(false)
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  // const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | {
-  //   imageName: string;
-  //   imageLink: string
-  // } | undefined>(image)
-  // const [profilePhotoName, setProfilePhotoName] = React.useState<string>(imageName)
-  // const [profilePhoto, setProfilePhoto] = useState<File | undefined>()
-  // const router = useRouter()
+  const router = useRouter()
 
-  // const {mutate, isError, error} = useMutation<void, Error, EditUser, unknown>({
-  //   mutationKey: ['editUser'],
-  //   mutationFn: userUpdate,
-  //   onSuccess: async () => {
-  //     router.push(`/profile/${id}`)
-  //   }
-  // })
+  const {mutate, isError, error} = useMutation<void, Error, EditUserData, unknown>({
+    mutationKey: ['editUser'],
+    mutationFn: userUpdate,
+    onSuccess: async () => {
+      await update({
+        email: loginVal,
+        name: nameVal,
+        image: sessionUser?.image?.imageLink
+      })
+      router.push(`/profile/${sessionUser?.id}`)
+    }
+  })
 
   const userEditHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -55,7 +50,7 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
       isValid = false
     }
     if (validateStringLength(nameVal, 3)) {
-      setnameError(true)
+      setNameError(true)
       isValid = false
     }
     if (passwordVal && !validatePassword(passwordVal)) {
@@ -65,7 +60,12 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
 
     if (isValid && loginVal) {
       try {
-        // mutate({formData, id})
+        mutate({
+          email: loginVal,
+          name: nameVal,
+          password: passwordVal,
+          id: sessionUser?.id
+        })
       } catch (error) {
         console.log(error)
       }
@@ -77,7 +77,7 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
       setLoginError(false)
     }
     if (!validateStringLength(nameVal, 3)) {
-      setnameError(false)
+      setNameError(false)
     }
     if (validatePassword(passwordVal)) {
       setPasswordError(false)
@@ -88,7 +88,7 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
     setLoginVal(event.target.value)
   }
   const nicknameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setnameVal(event.target.value)
+    setNameVal(event.target.value)
   }
   const passwordChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordVal(event.target.value)
@@ -99,15 +99,6 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
   const modalCloseHandler = () => {
     setModalOpen(false)
   }
-  // const addNewPhotoUrlHandler = (photo: string | { imageName: string; imageLink: string } | undefined) => {
-  //   setProfilePhotoUrl(photo)
-  // }
-  // const addNewPhotoHandler = (photoFile: File | undefined) => {
-  //   // setProfilePhoto(photoFile)
-  // }
-  // const addNewPhotoNameHandler = (photoName: string) => {
-  //   setProfilePhotoName(photoName)
-  // }
 
   return (
     <Transition
@@ -124,8 +115,7 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
       >
         <Image
           className="bg-white rounded-[50%] h-[256px] w-[256px] border-4 border-solid border-white"
-          // src={profilePhotoUrl ? `${profilePhotoUrl}` : "/defaultUserIcon.png"}
-          src={image ? `${image}` : "/defaultUserIcon.png"}
+          src={sessionUser?.image?.imageLink ? sessionUser?.image?.imageLink : "/defaultUserIcon.png"}
           alt="Profile Image"
           height={256}
           width={256}
@@ -148,13 +138,6 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
         >
           <AddPhotoComponent
             onClose={modalCloseHandler}
-            // image={profilePhotoUrl}
-            image={image}
-            imageName={imageName}
-            // addNewPhotoURL={addNewPhotoUrlHandler}
-            // addNewPhotoName={addNewPhotoNameHandler}
-            // addNewPhoto={addNewPhotoHandler}
-            id={id}
           />
         </Modal>
 
@@ -202,7 +185,7 @@ const EditProfileComponent: React.FC<EditProfileComponentProps> = ({id, email, n
           <Button
             text="Cancel"
             style="btn-primary bg-[#BCC6CC] transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 max-sm:w-[96px] max-sm:h-[26px] my-5"
-            link={`/profile/${id}`}
+            link={`/profile/${sessionUser?.id}`}
           />
         </div>
       </form>

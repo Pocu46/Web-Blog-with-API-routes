@@ -1,5 +1,5 @@
 import {
-  editPostProps, EditUser,
+  editPostProps, EditUser, EditUserData,
   postActionProps,
   PostsType, registrationProps,
   SendPostProps
@@ -146,9 +146,28 @@ export const userRegistration = async ({email, name, password, confirmPassword}:
   }
 }
 
-export const userProfileImageUpdate = async ({formData, id}: EditUser) => {
+export const userUpdate = async ({email, name, password, id}: EditUserData) => {
   try {
     const response = await fetch(`/api/profile/${id}/edit`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        email,
+        name,
+        password
+      })
+    })
+
+    if (response.status !== 200) {
+      throw new Error("User Profile Data update failed")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userProfileImageUpdate = async ({formData, id}: EditUser) => {
+  try {
+    const response = await fetch(`/api/profile/${id}/edit/image`, {
       method: 'PATCH',
       body: formData
     })

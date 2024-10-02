@@ -2,7 +2,7 @@ import {NextRequest} from "next/server";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {connectToDB} from "@/utils/database";
-import {deleteImage, uploadImage} from "@/utils/methods";
+import {uploadImage} from "@/utils/methods";
 import User from "@/models/user";
 
 export const PATCH = async (request: NextRequest, {params}: { params: { id: string } }) => {
@@ -14,13 +14,9 @@ export const PATCH = async (request: NextRequest, {params}: { params: { id: stri
 
   const data = await request.formData()
   const image = data.get("image") as File
-  const imageName = data.get("imageName") as string
 
   try {
     const imageData = await uploadImage(image)
-    await deleteImage(imageName)
-    // imageData.imageName  name
-    // imageData.imageLink  link
 
     await connectToDB();
     // Find the existing User by ID
@@ -38,8 +34,8 @@ export const PATCH = async (request: NextRequest, {params}: { params: { id: stri
 
     await existingUser.save();
 
-    return new Response("User successfully updated", {status: 200});
+    return new Response("User Profile Image successfully updated", {status: 200});
   } catch (error) {
-    return new Response("Error User updating", {status: 500});
+    return new Response("Error User Profile Image updating", {status: 500});
   }
 }

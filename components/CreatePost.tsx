@@ -85,7 +85,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
       queryClient.invalidateQueries({
         queryKey: ['list'],
         exact: true
-      });
+      })
     }
   })
 
