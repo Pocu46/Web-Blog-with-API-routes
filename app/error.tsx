@@ -1,6 +1,6 @@
 "use client"
 
-import Error from "@/components/Error";
+import Error from "@/components/ErrorComponent";
 
 export default function ErrorPage({ error, reset}: {
   error: Error & { digest?: string }

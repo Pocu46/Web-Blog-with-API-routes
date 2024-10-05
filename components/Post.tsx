@@ -27,7 +27,7 @@ const Post: React.FC<PostProps> = ({id, summary, time, type, text, isFavorite}) 
     mutationFn: postAction,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['posts'],
+        queryKey: ['list'],
         exact: true
       });
     }
@@ -115,18 +115,20 @@ const Post: React.FC<PostProps> = ({id, summary, time, type, text, isFavorite}) 
             />
           </div>
           <div>
-            <Checkbox action={changeFullStateHandler}/>
+            <Checkbox action={changeFullStateHandler} text="Enable full Summary text" />
           </div>
         </div>
       </div>
 
       <Modal
-        style="bg-[#b2c2cd] h-[400px] w-[960px] z-[5] p-[15px] rounded-xl backdrop:bg-[rgba(0,0,0,0.4)] max-sm:w-full modal"
+        style="h-full w-full z-[5] bg-[rgba(0,0,0,0.4)] fixed top-0 left-0 flex justify-center items-start pt-[128px]"
         open={isOpened}
         onClose={editClose}
         root="modalId"
       >
-        <CreatePost id={id} summaryValue={summary} textValue={text} typeValue={type} isFavorite={isFavorite} action={editClose} headingText="Edit Post" buttonText="Edit" />
+        <div className="bg-[#b2c2cd] h-[400px] w-[960px] p-[15px] rounded-xl backdrop:bg-[rgba(0,0,0,0.4)]" onClick={(event) => event.stopPropagation()}>
+          <CreatePost id={id} summaryValue={summary} textValue={text} typeValue={type} isFavorite={isFavorite} action={editClose} headingText="Edit Post" buttonText="Edit" />
+        </div>
       </Modal>
     </>
   )

@@ -5,7 +5,7 @@ import {getPosts} from "@/utils/http";
 import {PostsType} from "@/utils/models";
 import {useQuery} from "@tanstack/react-query";
 import Loader from "@/components/Loader";
-import Error from "@/components/Error";
+import Error from "@/components/ErrorComponent";
 import {useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import {Transition} from '@headlessui/react';
@@ -16,25 +16,10 @@ const Posts = () => {
   const [search, setSearch] = useState<string>('')
   const searchRef = useRef<HTMLInputElement>(null)
   const {data, error, isError, isPending, refetch} = useQuery({
-    queryKey: ['posts'],
+    queryKey: ['list'],
     queryFn: getPosts,
     refetchOnWindowFocus: false,
   })
-
-  const posts: PostsType[] = []
-
-  for (let key in data) {
-    posts.push({
-      id: key,
-      summary: data[key].summary,
-      text: data[key].text,
-      type: data[key].type,
-      time: data[key].time,
-      isFavorite: data[key].isFavorite
-    })
-  }
-
-  const postsReverse: PostsType[] = posts.reverse()
 
   const filterHandler: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     setFilter(event.target.value)
@@ -59,21 +44,25 @@ const Posts = () => {
     let temporaryFilteredArray: PostsType[] = []
 
     if (filter === 'All') {
-      temporaryFilteredArray = [...postsReverse]
+      if (data && data.length > 0) temporaryFilteredArray = [...data]
     }
     if (filter === 'Notes') {
-      temporaryFilteredArray = (postsReverse.filter(post => {
-        if (post.type === 'Note') {
-          return true
-        }
-      }))
+      if (data && data.length > 0) {
+        temporaryFilteredArray = (data.filter(post => {
+          if (post.type === 'Note') {
+            return true
+          }
+        }))
+      }
     }
     if (filter === 'News') {
-      temporaryFilteredArray = (postsReverse.filter(post => {
-        if (post.type === 'News') {
-          return true
-        }
-      }))
+      if (data && data.length > 0) {
+        temporaryFilteredArray = (data.filter(post => {
+          if (post.type === 'News') {
+            return true
+          }
+        }))
+      }
     }
     if (search.length) {
       temporaryFilteredArray = temporaryFilteredArray.filter(post => (post.summary)?.toLowerCase().includes(search.toLowerCase()))
@@ -81,7 +70,7 @@ const Posts = () => {
     setFilteredArray(temporaryFilteredArray)
   }, [filter, data, search])
 
-  if (data && postsReverse.length === 0 && !error) return (
+  if (data && data.length === 0 && !error) return (
     <Transition
       appear={true}
       show={true}
@@ -94,7 +83,7 @@ const Posts = () => {
     </Transition>
   )
   if (isPending) return <Loader/>
-  if (!data && !posts.length && isError) return <Error reset={() => refetch()} error={error}/>
+  if (!data && isError) return <Error reset={() => refetch()} error={error}/>
 
   return (
     <Transition
@@ -152,7 +141,7 @@ const Posts = () => {
             </Transition.Child>
             : filteredArray.map(post => {
               return (
-                <li key={post.id}>
+                <li key={post._id}>
                   <Transition.Child
                     enter="ease-linear duration-700 delay-300"
                     enterFrom="opacity-0 scale-80"
@@ -160,7 +149,7 @@ const Posts = () => {
                     className="w-full"
                   >
                     <Post
-                      id={post.id}
+                      id={post._id}
                       time={post.time}
                       summary={post.summary}
                       text={post.text}

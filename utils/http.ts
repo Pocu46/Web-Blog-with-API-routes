@@ -1,26 +1,39 @@
-import {editPostProps, postActionProps, PostsData, SendPostProps} from "@/utils/models";
+import {
+  editPostProps, EditUser, EditUserData,
+  postActionProps,
+  PostsType, registrationProps,
+  SendPostProps
+} from "@/utils/models";
 import moment from "moment";
 import {QueryClient} from "@tanstack/react-query";
 
-export const queryClient:QueryClient = new QueryClient()
+export const queryClient: QueryClient = new QueryClient()
 
-export const getPosts = async ():Promise<PostsData> => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL}`
-
-  const res = await fetch(url)
+export const getPosts = async (): Promise<PostsType[] | []> => {
+  const res = await fetch("/api/notes/list");
   if (!res.ok) {
-    throw new Error('Failed to fetch data')
+    throw new Error('Failed to fetch Posts')
   }
   const data = await res.json()
 
   return data
 }
 
-export const sendPost = async ({summary, text, type}: SendPostProps) => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL}`
+export const getFavoritePosts = async (): Promise<PostsType[] | []> => {
+  const res = await fetch("/api/notes/favorites");
+  if (!res.ok) {
+    throw new Error('Failed to fetch Posts')
+  }
+  const data = await res.json()
+
+  return data
+}
+
+export const sendPost = async ({userId, summary, text, type}: SendPostProps) => {
   const payload = {
     method: 'POST',
     body: JSON.stringify({
+      userId,
       summary: summary?.trim(),
       text: text?.trim(),
       type: type,
@@ -30,10 +43,10 @@ export const sendPost = async ({summary, text, type}: SendPostProps) => {
   }
 
   try {
-    const response = await fetch(url, payload)
+    const response = await fetch("/api/notes/create", payload)
 
-    if(!response?.ok) {
-      throw Error( 'The Post isn\'t saved!')
+    if (!response?.ok) {
+      throw Error('The Post isn\'t created!')
     }
   } catch {
     throw Error('Server doesn\'t available at this moment!')
@@ -41,10 +54,9 @@ export const sendPost = async ({summary, text, type}: SendPostProps) => {
 }
 
 export const postAction = async ({id, summary, text, type, time, isFavorite, method}: postActionProps) => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
   let isFavoriteValue: boolean
 
-  if(isFavorite === false) {
+  if (isFavorite === false) {
     isFavoriteValue = true
   } else {
     isFavoriteValue = false
@@ -78,7 +90,7 @@ export const postAction = async ({id, summary, text, type, time, isFavorite, met
   }
 
   try {
-    const response = await fetch(url, payload)
+    const response = await fetch(`/api/notes/${id}`, payload)
 
     if (!response?.ok) {
       throw Error(message)
@@ -89,8 +101,6 @@ export const postAction = async ({id, summary, text, type, time, isFavorite, met
 }
 
 export const editPost = async ({id, summary, text, type, isFavorite}: editPostProps) => {
-  const url: string = `${process.env.NEXT_PUBLIC_DB_URL_POST_CHANGE}/posts/${id}.json`
-
   const payload = {
     method: 'PATCH',
     body: JSON.stringify({
@@ -103,12 +113,69 @@ export const editPost = async ({id, summary, text, type, isFavorite}: editPostPr
   }
 
   try {
-    const response = await fetch(url, payload)
+    const response = await fetch(`/api/notes/${id}`, payload)
 
     if (!response?.ok) {
       throw Error("Post isn't edited. Please try again later!")
     }
   } catch {
     throw Error("Post isn't edited. Please try again later!")
+  }
+}
+
+export const userRegistration = async ({email, name, password, confirmPassword}: registrationProps) => {
+  try {
+    const response = await fetch('/api/registration', {
+      method: 'POST',
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        name,
+        password,
+        confirmPassword
+      })
+    })
+
+    if (response.status !== 201) {
+      throw new Error("User registration failed")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userUpdate = async ({email, name, password, id}: EditUserData) => {
+  try {
+    const response = await fetch(`/api/profile/${id}/edit`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        email,
+        name,
+        password
+      })
+    })
+
+    if (response.status !== 200) {
+      throw new Error("User Profile Data update failed")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const userProfileImageUpdate = async ({formData, id}: EditUser) => {
+  try {
+    const response = await fetch(`/api/profile/${id}/edit/image`, {
+      method: 'PATCH',
+      body: formData
+    })
+
+    if (response.status !== 200) {
+      throw new Error("User Profile Image update failed")
+    }
+  } catch (error) {
+    console.log(error)
   }
 }

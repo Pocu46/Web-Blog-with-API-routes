@@ -6,9 +6,11 @@ import {useMutation} from "@tanstack/react-query";
 import {useRouter} from "next/navigation";
 import {editPost, queryClient, sendPost} from "@/utils/http";
 import Loader from "@/components/Loader";
-import Error from "@/components/Error";
-import {editPostProps, SendPostProps} from "@/utils/models";
+import {editPostProps, SendPostProps, sessionUserType} from "@/utils/models";
 import {Transition} from '@headlessui/react';
+import {useSession} from "next-auth/react";
+import ErrorComponent from "@/components/ErrorComponent";
+import {validateStringLength} from "@/utils/methods";
 
 type CreatePostProps = {
   id?: string;
@@ -39,7 +41,9 @@ const CreatePost: React.FC<CreatePostProps> = ({
   const summaryRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const typeRef = useRef<HTMLSelectElement>(null);
+  const session = useSession()
   const router = useRouter()
+  const sessionUser = session?.data?.user as sessionUserType
 
   useEffect(() => {
     if (summaryValue && textValue && typeValue && summaryRef.current !== null && textRef.current !== null && typeRef.current !== null) {
@@ -64,7 +68,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
     onSuccess: () => {
       setIsSpinning(true)
       queryClient.invalidateQueries({
-        queryKey: ['posts'],
+        queryKey: ['list'],
         exact: true
       });
       router.replace('/post/posts')
@@ -79,35 +83,37 @@ const CreatePost: React.FC<CreatePostProps> = ({
     mutationFn: editPost,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['posts'],
+        queryKey: ['list'],
         exact: true
-      });
+      })
     }
   })
 
   const createPostHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if ((summaryVal!.trim().length < 3 && textVal!.trim().length < 5) || (!summaryVal && !textVal)) {
-      setSummaryError(true);
-      setTextError(true);
-    }
+    let isValid = true
 
-    if (summaryVal!.trim().length < 3 || !summaryVal) {
+    if(validateStringLength(summaryVal, 3) || !summaryVal) {
       setSummaryError(true);
+      isValid = false
       return
     }
-    if (textVal!.trim().length < 5 || !textVal) {
+    if(validateStringLength(textVal, 5) || !textVal) {
       setTextError(true);
+      isValid = false
       return
     }
 
-    mutate({
-      summary: summaryVal,
-      text: textVal,
-      type: typeRef.current?.value
-    });
-  };
+    if(isValid) {
+      mutate({
+        userId: sessionUser?.id,
+        summary: summaryVal,
+        text: textVal,
+        type: typeRef.current?.value
+      })
+    }
+  }
 
   const summaryStyles: string = summaryError ? "w-full px-3 py-1.5 bg-[#e5b6c0] rounded-md border-2 border-solid border-[red]" : "w-full px-3 py-1.5 rounded-md border-2 border-solid border-[#99aec3]"
   const textStyles: string = textError ? "w-full px-3 py-1.5 bg-[#e5b6c0] rounded-md border-2 border-solid border-[red]" : "w-full px-3 py-1.5 rounded-md border-2 border-solid border-[#99aec3]"
@@ -135,16 +141,17 @@ const CreatePost: React.FC<CreatePostProps> = ({
   if (isSpinning && !isError) return <Loader/>
   if (isError) {
     return (
-      <Error reset={() => mutate({
-        summary: summaryRef.current?.value,
-        text: textRef.current?.value,
+      <ErrorComponent reset={() => mutate({
+        userId: sessionUser?.id,
+        summary: summaryVal,
+        text: textVal,
         type: typeRef.current?.value
       })}
              error={error}
       />
     )
   }
-  if (isEditError) return <Error reset={editPostHandler} error={editError}/>
+  if (isEditError) return <ErrorComponent reset={editPostHandler} error={editError}/>
 
   return (
     <Transition
@@ -155,8 +162,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
       enterTo="opacity-100 scale-100"
       className="w-full"
     >
-      <form className="w-full h-auto"
-            onSubmit={buttonText === "Edit" ? editPostHandler : createPostHandler}>
+      <form className="w-full h-auto" onSubmit={buttonText === "Edit" ? editPostHandler : createPostHandler}>
         <h2 className="text-center text-3xl font-[500] leading-[1.2] mb-2">{headingText}</h2>
 
         <div className="my-2 flex flex-col">

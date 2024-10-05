@@ -1,5 +1,6 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import ClientPortal from "@/components/ClientPortal";
+import {Transition} from "@headlessui/react";
 
 type ModalProps = {
   children: React.ReactNode;
@@ -10,47 +11,20 @@ type ModalProps = {
 }
 
 const Modal: React.FC<ModalProps> = ({children, style, open, onClose, root}) => {
-  const dialogRef = useRef<HTMLDialogElement | null>(null)
-
-  const handleClickOutside = (event: MouseEvent) => {
-    const target = (event.target as HTMLElement).className
-
-    if (target.includes('modal')) {
-      dialogRef.current?.close()
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }
-
-  useEffect(() => {
-    if (open) {
-      if (dialogRef.current) {
-        dialogRef.current.showModal();
-        document.addEventListener("click", handleClickOutside);
-      }
-    } else {
-      if (dialogRef.current) {
-        dialogRef.current.close();
-        document.removeEventListener("click", handleClickOutside);
-      }
-    }
-
-    return () => {
-      if (dialogRef.current) {
-        dialogRef.current.close();
-        document.removeEventListener("click", handleClickOutside);
-      }
-    };
-  }, [open]);
-
   return (
     <ClientPortal show={open} root={root}>
-      <dialog
+      <Transition
+        as={"div"}
+        appear={true}
+        show={open}
+        enter="ease-linear duration-700"
+        enterFrom="opacity-0 scale-80"
+        enterTo="opacity-100 scale-100"
         className={style}
-        ref={dialogRef}
-        onClose={onClose}
+        onClick={onClose}
       >
         {children}
-      </dialog>
+      </Transition>
     </ClientPortal>
   )
 }

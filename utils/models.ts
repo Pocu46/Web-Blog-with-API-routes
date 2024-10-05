@@ -1,5 +1,12 @@
+type PostCrator = {
+  _id: string;
+  email: string;
+  name: string;
+}
+
 export type PostsType = {
-  id: string,
+  _id: string;
+  creator: PostCrator,
   summary: string,
   text: string,
   type: string,
@@ -23,6 +30,7 @@ export type PostsData = {
 export type PostType = "Note" | "News";
 
 export type SendPostProps = {
+  userId: string;
   summary?: string;
   text?: string;
   type?: string | PostType
@@ -44,4 +52,33 @@ export type editPostProps = {
   text?: string;
   isFavorite?: boolean;
   type?: string | PostType
+}
+
+export type registrationProps = {
+  email: string;
+  name: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export type sessionUserType = {
+  id: string;
+  name: string;
+  email?: string;
+  image?: {
+    imageName: string;
+    imageLink: string;
+  };
+}
+
+export type EditUser = {
+  formData: FormData;
+  id: string;
+}
+
+export type EditUserData = {
+  email: string | undefined;
+  name: string;
+  password: string;
+  id: string;
 }
