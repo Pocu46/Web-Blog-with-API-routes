@@ -71,7 +71,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
         queryKey: ['list'],
         exact: true
       });
-      router.replace('/post/posts')
+      router.replace('/post/list')
     }
   })
   const {
@@ -97,12 +97,10 @@ const CreatePost: React.FC<CreatePostProps> = ({
     if(validateStringLength(summaryVal, 3) || !summaryVal) {
       setSummaryError(true);
       isValid = false
-      return
     }
     if(validateStringLength(textVal, 5) || !textVal) {
       setTextError(true);
       isValid = false
-      return
     }
 
     if(isValid) {
@@ -206,7 +204,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
         <Button
           text={buttonText}
           style="btn-primary mt-5 bg-[#88bddd] m-auto transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 max-sm:w-[96px] max-sm:h-[26px]"
-          link="/post/posts"
+          link="/post/list"
           type="submit"
           isButton={true}
         />

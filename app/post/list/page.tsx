@@ -106,6 +106,7 @@ const Posts = () => {
 
           <div
             className="bg-[#1e3a8a33] w-full flex justify-around items-center my-2 cursor-default rounded-lg py-1 pl-1 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-300 sm:text-sm"
+            data-cy="posts-page-searchbar"
           >
             <input
               className="w-full h-[36px] px-1 rounded-lg"

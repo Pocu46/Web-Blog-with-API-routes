@@ -9,7 +9,6 @@ import {validateEmail, validatePassword, validateStringLength} from "@/utils/met
 import {userRegistration} from "@/utils/http";
 import {useMutation} from "@tanstack/react-query";
 import {registrationProps} from "@/utils/models";
-import {useRouter} from "next/navigation";
 import {signIn} from "next-auth/react";
 import ErrorComponent from "@/components/ErrorComponent";
 
@@ -22,24 +21,16 @@ const RegistrationComponent = () => {
   const [passwordValError, setPasswordError] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState<string>('')
   const [confirmPasswordError, setConfirmPasswordError] = useState(false)
-  const router = useRouter()
 
   const {mutate, isError, error} = useMutation<void, Error, registrationProps, unknown>({
     mutationKey: ['createUser'],
     mutationFn: userRegistration,
     onSuccess: async () => {
-      const res = await signIn('credentials', {
+      await signIn('credentials', {
         email: loginVal,
-        // name: nameVal,
         password: passwordVal,
-        redirect: false
+        callbackUrl: "/"
       })
-
-      if (res && !res.error && res.status === 200) {
-        router.replace('/')
-      } else {
-        console.log(res)
-      }
     }
   })
 
@@ -52,7 +43,7 @@ const RegistrationComponent = () => {
       setLoginError(true)
       isValid = false
     }
-    if(validateStringLength(nameVal, 3)) {
+    if(validateStringLength(nameVal, 3) || !nameVal) {
       setNameError(true)
       isValid = false
     }

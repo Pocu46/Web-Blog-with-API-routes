@@ -10,7 +10,7 @@ type HeaderProfileComponentProps = {
 
 const HeaderProfileComponent: React.FC<HeaderProfileComponentProps> = ({id, image, name}) => {
   return(
-    <Link href={`/profile/${id}`} className="flex justify-center items-center gap-2 px-3">
+    <Link href={`/profile/${id}`} className="flex justify-center items-center gap-2 px-3 max-lg:hidden" data-cy="header-profile-component">
       <Image
         className="bg-white rounded-[50%] h-[36px] w-[36px] border-4 border-solid border-white"
         src={image ? image : "/defaultUserIcon.png"}

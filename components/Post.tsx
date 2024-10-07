@@ -70,7 +70,7 @@ const Post: React.FC<PostProps> = ({id, summary, time, type, text, isFavorite}) 
           <p className="max-w-[150px] px-2">{time}</p>
           {
             isFull
-              ? <Marquee className="w-full h-[25px] text-center"><b>{summary}</b></Marquee>
+              ? <Marquee className="w-full h-[25px] text-center" data-cy="post-summary-marquee" ><b>{summary}</b></Marquee>
               : <p className="w-full h-[25px] overflow-hidden text-center"><b>{summary}</b></p>
           }
           <div className="flex justify-between items-center px-2 mx-2">
