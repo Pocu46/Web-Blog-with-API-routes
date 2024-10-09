@@ -42,5 +42,41 @@ describe('Should check Posts page logic', () => {
     cy.get('ul').find('li').first().find('[data-cy="post-summary-toggler"]').find('input').check()
     cy.get('ul').find('li').first().find('[data-cy="post-summary-toggler"]').find('input').should('be.checked')
     cy.get(':nth-child(2) > .rfm-child > b').should('have.text', `Test summary ${hash}`)
+
+    cy.get('button').contains('Edit').click()
+    cy.get('#summary').type('!')
+    cy.get('#text').type('!')
+    cy.get('select[name="type"]').select('News')
+    cy.get('form[class="w-full h-auto"]').submit()
+
+    cy.get('ul').find('li').first().find('p>b').should('have.text', `Test summary ${hash}!`)
+    cy.get('ul').find('li').first().find('p').contains(`Test text ${hash}!`)
+    cy.get('ul').find('li').first().find('img[alt="favorite-icon"]').siblings('span').should('have.text', 'News')
+
+    cy.get('button').contains('Edit').click()
+    cy.get('[data-cy="modal-backdrop"]').click()
+
+    cy.get('ul').find('li').first().find('button').contains('Favorite').click()
+    cy.get('ul').find('li').first().find('button').contains('Unfavorite')
+
+    cy.get('nav').find('a').contains('Favorites').click()
+
+    cy.location().should(location => {
+      expect(location.href).to.eq('http://localhost:3000/post/favorites')
+    })
+    cy.get('ul').find('li').first().find('p>b').should('have.text', `Test summary ${hash}!`)
+    cy.get('ul').find('li').first().find('p').contains(`Test text ${hash}!`)
+    cy.get('ul').find('li').first().find('img[alt="favorite-icon"]').siblings('span').should('have.text', 'News')
+
+    cy.get('nav').find('a').contains('Posts').click()
+    cy.location().should(location => {
+      expect(location.href).to.eq('http://localhost:3000/post/list')
+    })
+    cy.get('ul').find('li').first().find('button').contains('Delete').click()
+    cy.on('window:confirm', (message) => {
+      expect(message).to.equal('Are you sure you want to delete this article?')
+      return true
+    })
+    cy.get('ul').find('li').first().find('p>b').contains(`Test summary ${hash}!`).should('not.be.visible')
   })
 })

@@ -108,7 +108,7 @@ const Post: React.FC<PostProps> = ({id, summary, time, type, text, isFavorite}) 
             <Button
               type="button"
               action={favoriteStatusChangeHandler}
-              text={!isFavorite ? 'Favorite' : 'Unfavourite'}
+              text={!isFavorite ? 'Favorite' : 'Unfavorite'}
               style={!isFavorite ? "btn-primary bg-[#dede01] transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 max-sm:w-[96px] max-sm:h-[26px]" : "btn-primary bg-[gold] transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-300 max-sm:w-[96px] max-sm:h-[26px]"}
               link="/post/posts"
               isButton={true}

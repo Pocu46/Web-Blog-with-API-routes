@@ -22,6 +22,7 @@ const Modal: React.FC<ModalProps> = ({children, style, open, onClose, root}) => 
         enterTo="opacity-100 scale-100"
         className={style}
         onClick={onClose}
+        data-cy="modal-backdrop"
       >
         {children}
       </Transition>
