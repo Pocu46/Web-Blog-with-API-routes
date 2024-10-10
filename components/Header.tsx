@@ -32,6 +32,7 @@ const Header = () => {
       <div
         className="burger-wrapper"
         onClick={burgerButtonAcrion}
+        data-cy="burger-menu-button"
       >
         <span className="h-[3px] w-[26px] bg-[white]"/>
         <span className={isOpened ? "h-[3px] w-[26px] bg-[white] my-2" : "burger-line"}/>

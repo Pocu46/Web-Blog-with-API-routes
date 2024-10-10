@@ -25,6 +25,7 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
       enterTo="opacity-100 scale-100"
       className="w-[400px] h-full bg-[#5d5b76] left-0 top-0  max-sm:w-full z-[5] overflow-x-hidden overflow-y-auto"
       onClick={(event) => event.stopPropagation()}
+      data-cy="burger-menu-wrapper"
     >
       <h2 className="py-3 bg-[#4a535c] text-[white] mt-3 text-center text-2xl font-[200] leading-[1]">Create your
         posts to
@@ -46,8 +47,8 @@ const BurgerMenu: React.FC<{ action: () => void }> = ({action}) => {
       </div>}
 
       <nav className="m-auto mt-5 flex justify-center items-center flex-col py-2">
-        <Link onClick={action} className={pathname == "/post/profile" ? active : style}
-              href={`/profile/${sessionUser.id}`}>Profile</Link>
+        <Link onClick={action} className={pathname == `/profile/${sessionUser?.id}` ? active : style}
+              href={`/profile/${sessionUser?.id}`}>Profile</Link>
         <Link onClick={action} href="/" className={pathname == "/" ? active : style}>Home</Link>
         <Link onClick={action} className={pathname == "/post/list" ? active : style} href="/post/list">Posts</Link>
         <Link onClick={action} className={pathname == "/post/create" ? active : style} href="/post/create">Create

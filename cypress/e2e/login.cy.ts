@@ -55,7 +55,7 @@ describe('Should check Login logic', () => {
     })
   })
 
-  it.only('Should check login via Credentials mobile resolution', () => {
+  it('Should check login via Credentials mobile resolution', () => {
     cy.loginViaCredentials()
 
     cy.viewport('iphone-x')

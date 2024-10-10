@@ -25,7 +25,7 @@ describe('Should check Posts page logic', () => {
     cy.get('select').find(':selected').should('have.text', 'All')
   })
 
-  it.only('Should check Post functionality', () => {
+  it('Should check Post functionality', () => {
     const hash = Date.now().toFixed(10)
 
     cy.get('#summary').type(`Test summary ${hash}`)
